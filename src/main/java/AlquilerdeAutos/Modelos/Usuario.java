@@ -1,35 +1,57 @@
 package AlquilerdeAutos.Modelos;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-
 @Entity
-@Table(name ="usuario")
+@Table(name = "usuario")
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
 
-    @NotBlank(message = "El Nombre es Requerido" )
+    @NotBlank(message = "El Nombre es Requerido")
     private String Nombre;
 
-    @NotBlank(message = "El Apellido es Requerido" )
+    @NotBlank(message = "El Apellido es Requerido")
     private String Apellido;
 
-    @NotBlank(message = "El Gmail es Requerido" )
-    private String Gmail;
+    @NotBlank(message = "El Email es Requerido")
+    @Email(message = "El Email debe ser valido")
+    private String Email;
 
-    @NotBlank(message = "El Contrasena es Requerido" )
-    private String Contrasena;
+    @NotBlank(message = "El Password es Requerido")
+    @Column(name = "Password_hash")
+    private String Password_hash;
 
-    private LocalDateTime FechaDeRegristro;
+    private Boolean Activo = true;
 
+    @Column(name = "Fecha_creacion", updatable = false)
+    private LocalDateTime Fecha_creacion;
+
+    @NotNull(message = "El Rol es Requerido")
     @ManyToOne
-    @JoinColumn(name = "IdRol")
+    @JoinColumn(name = "Id_rol")
     private Rol rol;
+
+    @PrePersist
+    protected void onCreate() {
+        if (Fecha_creacion == null) {
+            Fecha_creacion = LocalDateTime.now();
+        }
+    }
 
     public Integer getId() {
         return Id;
@@ -55,28 +77,36 @@ public class Usuario {
         Apellido = apellido;
     }
 
-    public String getGmail() {
-        return Gmail;
+    public String getEmail() {
+        return Email;
     }
 
-    public void setGmail(String gmail) {
-        Gmail = gmail;
+    public void setEmail(String email) {
+        Email = email;
     }
 
-    public String getContrasena() {
-        return Contrasena;
+    public String getPassword_hash() {
+        return Password_hash;
     }
 
-    public void setContrasena(String contrasena) {
-        Contrasena = contrasena;
+    public void setPassword_hash(String password_hash) {
+        Password_hash = password_hash;
     }
 
-    public LocalDateTime getFechaDeRegristro() {
-        return FechaDeRegristro;
+    public Boolean getActivo() {
+        return Activo;
     }
 
-    public void setFechaDeRegristro(LocalDateTime fechaDeRegristro) {
-        FechaDeRegristro = fechaDeRegristro;
+    public void setActivo(Boolean activo) {
+        Activo = activo;
+    }
+
+    public LocalDateTime getFecha_creacion() {
+        return Fecha_creacion;
+    }
+
+    public void setFecha_creacion(LocalDateTime fecha_creacion) {
+        Fecha_creacion = fecha_creacion;
     }
 
     public Rol getRol() {

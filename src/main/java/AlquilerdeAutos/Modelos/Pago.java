@@ -1,50 +1,88 @@
 package AlquilerdeAutos.Modelos;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Pago")
+@Table(name = "pagos")
 public class Pago {
+
+    public enum MetodoPago {
+        EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdPago")
-    private Integer idPago;
+    private Integer Id;
 
+    @NotNull(message = "El Monto es Requerido")
+    @Positive(message = "El Monto debe ser mayor a 0")
+    private BigDecimal Monto;
+
+    @Column(name = "Fecha_pago", updatable = false)
+    private LocalDateTime Fecha_pago;
+
+    @NotNull(message = "El Metodo de Pago es Requerido")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Metodo_pago")
+    private MetodoPago Metodo_pago;
+
+    @NotNull(message = "El Alquiler es Requerido")
     @ManyToOne
-    @JoinColumn(name = "IdAlquiler", nullable = false)
+    @JoinColumn(name = "Id_alquiler")
     private Alquiler alquiler;
 
-    @Column(name = "FechaPago")
-    private LocalDateTime fechaPago;
-
-    @Column(name = "MetodoPago", length = 20)
-    private String metodoPago;
-
-    @Column(name = "Monto", precision = 10, scale = 2)
-    private BigDecimal monto;
-
-    @Column(name = "Estado", length = 20)
-    private String estado = "Pendiente";
-
-    public Pago() {
-    }
-
     @PrePersist
-    public void prePersist() {
-        if (this.fechaPago == null) {
-            this.fechaPago = LocalDateTime.now();
+    protected void onCreate() {
+        if (Fecha_pago == null) {
+            Fecha_pago = LocalDateTime.now();
         }
     }
 
-    public Integer getIdPago() {
-        return idPago;
+    public Integer getId() {
+        return Id;
     }
 
-    public void setIdPago(Integer idPago) {
-        this.idPago = idPago;
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public BigDecimal getMonto() {
+        return Monto;
+    }
+
+    public void setMonto(BigDecimal monto) {
+        Monto = monto;
+    }
+
+    public LocalDateTime getFecha_pago() {
+        return Fecha_pago;
+    }
+
+    public void setFecha_pago(LocalDateTime fecha_pago) {
+        Fecha_pago = fecha_pago;
+    }
+
+    public MetodoPago getMetodo_pago() {
+        return Metodo_pago;
+    }
+
+    public void setMetodo_pago(MetodoPago metodo_pago) {
+        Metodo_pago = metodo_pago;
     }
 
     public Alquiler getAlquiler() {
@@ -53,37 +91,5 @@ public class Pago {
 
     public void setAlquiler(Alquiler alquiler) {
         this.alquiler = alquiler;
-    }
-
-    public LocalDateTime getFechaPago() {
-        return fechaPago;
-    }
-
-    public void setFechaPago(LocalDateTime fechaPago) {
-        this.fechaPago = fechaPago;
-    }
-
-    public String getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
-    public BigDecimal getMonto() {
-        return monto;
-    }
-
-    public void setMonto(BigDecimal monto) {
-        this.monto = monto;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 }

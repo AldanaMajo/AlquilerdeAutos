@@ -1,37 +1,53 @@
 package AlquilerdeAutos.Modelos;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Categoria")
+@Table(name = "categorias")
 public class Categoria {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdCategoria")
-    private Integer idCategoria;
+    private Integer Id;
 
     @NotBlank(message = "El Nombre es Requerido")
-    @Column(name = "Nombre", length = 50, nullable = false)
-    private String nombre;
+    private String Nombre;
 
-    public Categoria() {
+    @NotNull(message = "La Tarifa Base Diaria es Requerida")
+    @Positive(message = "La Tarifa Base Diaria debe ser mayor a 0")
+    @Column(name = "Tarifa_base_diaria")
+    private BigDecimal Tarifa_base_diaria;
+
+    public Integer getId() {
+        return Id;
     }
 
-    public Integer getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(Integer idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setId(Integer id) {
+        Id = id;
     }
 
     public String getNombre() {
-        return nombre;
+        return Nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        Nombre = nombre;
+    }
+
+    public BigDecimal getTarifa_base_diaria() {
+        return Tarifa_base_diaria;
+    }
+
+    public void setTarifa_base_diaria(BigDecimal tarifa_base_diaria) {
+        Tarifa_base_diaria = tarifa_base_diaria;
     }
 }

@@ -1,69 +1,118 @@
 package AlquilerdeAutos.Modelos;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Vehiculo")
+@Table(name = "vehiculos")
 public class Vehiculo {
+
+    public enum EstadoVehiculo {
+        DISPONIBLE, ALQUILADO, MANTENIMIENTO
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdVehiculo")
-    private Integer idVehiculo;
+    private Integer Id;
 
+    @NotBlank(message = "La Placa es Requerida")
+    private String Placa;
+
+    @NotBlank(message = "El Modelo es Requerido")
+    private String Modelo;
+
+    @NotNull(message = "El Anio es Requerido")
+    private Integer Anio;
+
+    @NotBlank(message = "El Color es Requerido")
+    private String Color;
+
+    @NotNull(message = "El Precio por Dia es Requerido")
+    @Positive(message = "El Precio por Dia debe ser mayor a 0")
+    @Column(name = "Precio_por_dia")
+    private BigDecimal Precio_por_dia;
+
+    @NotNull(message = "El Estado es Requerido")
+    @Enumerated(EnumType.STRING)
+    private EstadoVehiculo Estado = EstadoVehiculo.DISPONIBLE;
+
+    @NotNull(message = "La Marca es Requerida")
     @ManyToOne
-    @JoinColumn(name = "IdMarca", nullable = false)
+    @JoinColumn(name = "Id_marca")
     private Marca marca;
 
+    @NotNull(message = "La Categoria es Requerida")
     @ManyToOne
-    @JoinColumn(name = "IdCategoria", nullable = false)
+    @JoinColumn(name = "Id_categoria")
     private Categoria categoria;
 
-    @NotBlank(message = "El modelo es requerido")
-    @Column(name = "Modelo", length = 100, nullable = false)
-    private String modelo;
-
-    @NotNull(message = "El año es requerido")
-    @Column(name = "Anio", nullable = false)
-    private Integer anio;
-
-    @NotBlank(message = "La placa es requerida")
-    @Column(name = "Placa", length = 20, unique = true, nullable = false)
-    private String placa;
-
-    @Column(name = "Color", length = 30)
-    private String color;
-
-    @Column(name = "Transmision", length = 20)
-    private String transmision;
-
-    @Column(name = "Combustible", length = 20)
-    private String combustible;
-
-    @Column(name = "Capacidad")
-    private Integer capacidad;
-
-    @Column(name = "PrecioDia", precision = 10, scale = 2)
-    private BigDecimal precioDia;
-
-    @Column(name = "Imagen", length = 255)
-    private String imagen;
-
-    @Column(name = "Estado", length = 20)
-    private String estado = "Disponible";
-
-    public Vehiculo() {
+    public Integer getId() {
+        return Id;
     }
 
-    public Integer getIdVehiculo() {
-        return idVehiculo;
+    public void setId(Integer id) {
+        Id = id;
     }
 
-    public void setIdVehiculo(Integer idVehiculo) {
-        this.idVehiculo = idVehiculo;
+    public String getPlaca() {
+        return Placa;
+    }
+
+    public void setPlaca(String placa) {
+        Placa = placa;
+    }
+
+    public String getModelo() {
+        return Modelo;
+    }
+
+    public void setModelo(String modelo) {
+        Modelo = modelo;
+    }
+
+    public Integer getAnio() {
+        return Anio;
+    }
+
+    public void setAnio(Integer anio) {
+        Anio = anio;
+    }
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String color) {
+        Color = color;
+    }
+
+    public BigDecimal getPrecio_por_dia() {
+        return Precio_por_dia;
+    }
+
+    public void setPrecio_por_dia(BigDecimal precio_por_dia) {
+        Precio_por_dia = precio_por_dia;
+    }
+
+    public EstadoVehiculo getEstado() {
+        return Estado;
+    }
+
+    public void setEstado(EstadoVehiculo estado) {
+        Estado = estado;
     }
 
     public Marca getMarca() {
@@ -80,85 +129,5 @@ public class Vehiculo {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-    }
-
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public Integer getAnio() {
-        return anio;
-    }
-
-    public void setAnio(Integer anio) {
-        this.anio = anio;
-    }
-
-    public String getPlaca() {
-        return placa;
-    }
-
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getTransmision() {
-        return transmision;
-    }
-
-    public void setTransmision(String transmision) {
-        this.transmision = transmision;
-    }
-
-    public String getCombustible() {
-        return combustible;
-    }
-
-    public void setCombustible(String combustible) {
-        this.combustible = combustible;
-    }
-
-    public Integer getCapacidad() {
-        return capacidad;
-    }
-
-    public void setCapacidad(Integer capacidad) {
-        this.capacidad = capacidad;
-    }
-
-    public BigDecimal getPrecioDia() {
-        return precioDia;
-    }
-
-    public void setPrecioDia(BigDecimal precioDia) {
-        this.precioDia = precioDia;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 }

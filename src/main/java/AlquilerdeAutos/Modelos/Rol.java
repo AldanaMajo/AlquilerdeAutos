@@ -7,15 +7,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Id;
 
-
 @Entity
-@Table( name ="rol")
+@Table(name = "rol")
 public class Rol {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
 
-    @NotBlank(message = "El Nombre es Requerido" )
+    @NotBlank(message = "El Nombre es Requerido")
     private String Nombre;
 
     public Integer getId() {
