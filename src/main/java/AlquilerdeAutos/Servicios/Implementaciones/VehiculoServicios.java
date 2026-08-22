@@ -2,14 +2,14 @@ package AlquilerdeAutos.Servicios.Implementaciones;
 
 import AlquilerdeAutos.Modelos.Vehiculo;
 import AlquilerdeAutos.Repositorios.VehiculoRepository;
-import AlquilerdeAutos.Servicios.Interfaces.IVehiculoServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IvehiculoServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class VehiculoServicios implements IVehiculoServicios {
+public class VehiculoServicios implements IvehiculoServicios {
 
     private final VehiculoRepository vehiculoRepository;
 
@@ -25,7 +25,8 @@ public class VehiculoServicios implements IVehiculoServicios {
 
     @Override
     public List<Vehiculo> listarPorEstado(String estado) {
-        return vehiculoRepository.findByEstado(estado);
+        Vehiculo.EstadoVehiculo estadoEnum = Vehiculo.EstadoVehiculo.valueOf(estado.toUpperCase());
+        return vehiculoRepository.findByEstado(estadoEnum);
     }
 
     @Override
@@ -54,18 +55,14 @@ public class VehiculoServicios implements IVehiculoServicios {
         existente.setAnio(vehiculo.getAnio());
         existente.setPlaca(vehiculo.getPlaca());
         existente.setColor(vehiculo.getColor());
-        existente.setTransmision(vehiculo.getTransmision());
-        existente.setCombustible(vehiculo.getCombustible());
-        existente.setCapacidad(vehiculo.getCapacidad());
-        existente.setPrecioDia(vehiculo.getPrecioDia());
-        existente.setImagen(vehiculo.getImagen());
+        existente.setPrecio_por_dia(vehiculo.getPrecio_por_dia());
         return vehiculoRepository.save(existente);
     }
 
     @Override
     public Vehiculo cambiarEstado(Integer id, String nuevoEstado) {
         Vehiculo existente = buscarPorId(id);
-        existente.setEstado(nuevoEstado);
+        existente.setEstado(Vehiculo.EstadoVehiculo.valueOf(nuevoEstado.toUpperCase()));
         return vehiculoRepository.save(existente);
     }
 

@@ -3,22 +3,23 @@ package AlquilerdeAutos.Servicios.Implementaciones;
 import AlquilerdeAutos.Modelos.Alquiler;
 import AlquilerdeAutos.Modelos.Pago;
 import AlquilerdeAutos.Repositorios.PagoRepository;
-import AlquilerdeAutos.Servicios.Interfaces.IAlquilerServicios;
-import AlquilerdeAutos.Servicios.Interfaces.IPagoServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IalquilerServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IpagoServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class PagoServicios implements IPagoServicios {
+public class PagoServicios implements IpagoServicios {
 
     private final PagoRepository pagoRepository;
-    private final IAlquilerServicios alquilerServicios;
+    private final IalquilerServicios alquilerServicios;
 
     @Autowired
-    public PagoServicios(PagoRepository pagoRepository, IAlquilerServicios alquilerServicios) {
+    public PagoServicios(PagoRepository pagoRepository, IalquilerServicios alquilerServicios) {
         this.pagoRepository = pagoRepository;
         this.alquilerServicios = alquilerServicios;
     }
@@ -29,14 +30,14 @@ public class PagoServicios implements IPagoServicios {
     }
 
     @Override
-    public Pago buscarPorId(Integer id) {
-        return pagoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+    public Optional<Pago> obtenerPorId(Integer id) {
+        return pagoRepository.findById(id);
     }
 
     @Override
     public Pago registrarPago(Integer idAlquiler, String metodoPago, BigDecimal monto) {
-        Alquiler alquiler = alquilerServicios.buscarPorId(idAlquiler);
+        Alquiler alquiler = alquilerServicios.obtenerPorId(idAlquiler)
+                .orElseThrow(() -> new IllegalArgumentException("Alquiler no encontrado con id: " + idAlquiler));
 
         Pago pago = new Pago();
         pago.setAlquiler(alquiler);
@@ -49,7 +50,6 @@ public class PagoServicios implements IPagoServicios {
 
     @Override
     public void eliminar(Integer id) {
-        buscarPorId(id);
         pagoRepository.deleteById(id);
     }
 }
