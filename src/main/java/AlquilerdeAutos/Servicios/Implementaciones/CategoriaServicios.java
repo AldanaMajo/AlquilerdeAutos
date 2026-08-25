@@ -2,14 +2,14 @@ package AlquilerdeAutos.Servicios.Implementaciones;
 
 import AlquilerdeAutos.Modelos.Categoria;
 import AlquilerdeAutos.Repositorios.CategoriaRepository;
-import AlquilerdeAutos.Servicios.Interfaces.ICategoriaServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IcategoriaServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CategoriaServicios implements ICategoriaServicios {
+public class CategoriaServicios implements IcategoriaServicios {
 
     private final CategoriaRepository categoriaRepository;
 
@@ -38,6 +38,7 @@ public class CategoriaServicios implements ICategoriaServicios {
     public Categoria actualizar(Integer id, Categoria categoria) {
         Categoria existente = buscarPorId(id);
         existente.setNombre(categoria.getNombre());
+        existente.setTarifa_base_diaria(categoria.getTarifa_base_diaria());
         return categoriaRepository.save(existente);
     }
 

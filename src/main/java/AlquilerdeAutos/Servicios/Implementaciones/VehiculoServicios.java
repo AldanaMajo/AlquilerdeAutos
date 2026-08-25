@@ -24,9 +24,8 @@ public class VehiculoServicios implements IvehiculoServicios {
     }
 
     @Override
-    public List<Vehiculo> listarPorEstado(String estado) {
-        Vehiculo.EstadoVehiculo estadoEnum = Vehiculo.EstadoVehiculo.valueOf(estado.toUpperCase());
-        return vehiculoRepository.findByEstado(estadoEnum);
+    public List<Vehiculo> listarDisponibles() {
+        return vehiculoRepository.findByEstado(Vehiculo.EstadoVehiculo.DISPONIBLE);
     }
 
     @Override
@@ -49,20 +48,20 @@ public class VehiculoServicios implements IvehiculoServicios {
     @Override
     public Vehiculo actualizar(Integer id, Vehiculo vehiculo) {
         Vehiculo existente = buscarPorId(id);
-        existente.setMarca(vehiculo.getMarca());
-        existente.setCategoria(vehiculo.getCategoria());
+        existente.setPlaca(vehiculo.getPlaca());
         existente.setModelo(vehiculo.getModelo());
         existente.setAnio(vehiculo.getAnio());
-        existente.setPlaca(vehiculo.getPlaca());
         existente.setColor(vehiculo.getColor());
         existente.setPrecio_por_dia(vehiculo.getPrecio_por_dia());
+        existente.setMarca(vehiculo.getMarca());
+        existente.setCategoria(vehiculo.getCategoria());
         return vehiculoRepository.save(existente);
     }
 
     @Override
-    public Vehiculo cambiarEstado(Integer id, String nuevoEstado) {
+    public Vehiculo cambiarEstado(Integer id, Vehiculo.EstadoVehiculo nuevoEstado) {
         Vehiculo existente = buscarPorId(id);
-        existente.setEstado(Vehiculo.EstadoVehiculo.valueOf(nuevoEstado.toUpperCase()));
+        existente.setEstado(nuevoEstado);
         return vehiculoRepository.save(existente);
     }
 

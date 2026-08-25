@@ -7,7 +7,7 @@ import java.util.List;
 public interface IclienteServicios {
     List<Cliente> listar();
     Cliente buscarPorId(Integer id);
-    Cliente buscarPorDui(String dui);
+    Cliente buscarPorDocumento(String documentoIdentidad);
     Cliente guardar(Cliente cliente);
     Cliente actualizar(Integer id, Cliente cliente);
     void eliminar(Integer id);

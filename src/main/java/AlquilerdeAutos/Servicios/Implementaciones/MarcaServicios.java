@@ -2,14 +2,14 @@ package AlquilerdeAutos.Servicios.Implementaciones;
 
 import AlquilerdeAutos.Modelos.Marca;
 import AlquilerdeAutos.Repositorios.MarcaRepository;
-import AlquilerdeAutos.Servicios.Interfaces.IMarcaServicios;
+import AlquilerdeAutos.Servicios.Interfaces.ImarcaServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class MarcaServicios implements IMarcaServicios {
+public class MarcaServicios implements ImarcaServicios {
 
     private final MarcaRepository marcaRepository;
 

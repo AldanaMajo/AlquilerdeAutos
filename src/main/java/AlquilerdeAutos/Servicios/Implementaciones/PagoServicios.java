@@ -1,27 +1,21 @@
 package AlquilerdeAutos.Servicios.Implementaciones;
 
-import AlquilerdeAutos.Modelos.Alquiler;
 import AlquilerdeAutos.Modelos.Pago;
 import AlquilerdeAutos.Repositorios.PagoRepository;
-import AlquilerdeAutos.Servicios.Interfaces.IalquilerServicios;
 import AlquilerdeAutos.Servicios.Interfaces.IpagoServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PagoServicios implements IpagoServicios {
 
     private final PagoRepository pagoRepository;
-    private final IalquilerServicios alquilerServicios;
 
     @Autowired
-    public PagoServicios(PagoRepository pagoRepository, IalquilerServicios alquilerServicios) {
+    public PagoServicios(PagoRepository pagoRepository) {
         this.pagoRepository = pagoRepository;
-        this.alquilerServicios = alquilerServicios;
     }
 
     @Override
@@ -30,26 +24,33 @@ public class PagoServicios implements IpagoServicios {
     }
 
     @Override
-    public Optional<Pago> obtenerPorId(Integer id) {
-        return pagoRepository.findById(id);
+    public List<Pago> listarPorAlquiler(Integer idAlquiler) {
+        return pagoRepository.findByAlquiler_Id(idAlquiler);
     }
 
     @Override
-    public Pago registrarPago(Integer idAlquiler, String metodoPago, BigDecimal monto) {
-        Alquiler alquiler = alquilerServicios.obtenerPorId(idAlquiler)
-                .orElseThrow(() -> new IllegalArgumentException("Alquiler no encontrado con id: " + idAlquiler));
+    public Pago buscarPorId(Integer id) {
+        return pagoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+    }
 
-        Pago pago = new Pago();
-        pago.setAlquiler(alquiler);
-        pago.setMetodoPago(metodoPago);
-        pago.setMonto(monto);
-        pago.setEstado("Pagado");
-
+    @Override
+    public Pago guardar(Pago pago) {
         return pagoRepository.save(pago);
     }
 
     @Override
+    public Pago actualizar(Integer id, Pago pago) {
+        Pago existente = buscarPorId(id);
+        existente.setMonto(pago.getMonto());
+        existente.setMetodo_pago(pago.getMetodo_pago());
+        existente.setAlquiler(pago.getAlquiler());
+        return pagoRepository.save(existente);
+    }
+
+    @Override
     public void eliminar(Integer id) {
+        buscarPorId(id);
         pagoRepository.deleteById(id);
     }
 }

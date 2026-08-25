@@ -2,17 +2,13 @@ package AlquilerdeAutos.Servicios.Interfaces;
 
 import AlquilerdeAutos.Modelos.Pago;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 public interface IpagoServicios {
-
     List<Pago> listar();
-
-    Optional<Pago> obtenerPorId(Integer id);
-
-    Pago registrarPago(Integer idAlquiler, String metodoPago, BigDecimal monto);
-
+    List<Pago> listarPorAlquiler(Integer idAlquiler);
+    Pago buscarPorId(Integer id);
+    Pago guardar(Pago pago);
+    Pago actualizar(Integer id, Pago pago);
     void eliminar(Integer id);
 }
