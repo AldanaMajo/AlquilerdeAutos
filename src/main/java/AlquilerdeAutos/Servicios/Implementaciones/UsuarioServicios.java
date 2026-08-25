@@ -2,15 +2,14 @@ package AlquilerdeAutos.Servicios.Implementaciones;
 
 import AlquilerdeAutos.Modelos.Usuario;
 import AlquilerdeAutos.Repositorios.UsuarioRepository;
-import AlquilerdeAutos.Servicios.Interfaces.IUsuarioServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IusuarioServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class UsuarioServicios implements IUsuarioServicios {
+public class UsuarioServicios implements IusuarioServicios {
 
     private final UsuarioRepository usuarioRepository;
 
@@ -31,15 +30,15 @@ public class UsuarioServicios implements IUsuarioServicios {
     }
 
     @Override
-    public Usuario buscarPorGmail(String gmail) {
-        return usuarioRepository.findByGmail(gmail)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con gmail: " + gmail));
+    public Usuario buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + email));
     }
 
     @Override
     public Usuario guardar(Usuario usuario) {
-        if (usuario.getFechaDeRegristro() == null) {
-            usuario.setFechaDeRegristro(LocalDateTime.now());
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("Ya existe un usuario con ese email");
         }
         return usuarioRepository.save(usuario);
     }
@@ -49,10 +48,7 @@ public class UsuarioServicios implements IUsuarioServicios {
         Usuario existente = buscarPorId(id);
         existente.setNombre(usuario.getNombre());
         existente.setApellido(usuario.getApellido());
-        existente.setGmail(usuario.getGmail());
-        if (usuario.getContrasena() != null && !usuario.getContrasena().isBlank()) {
-            existente.setContrasena(usuario.getContrasena());
-        }
+        existente.setEmail(usuario.getEmail());
         existente.setRol(usuario.getRol());
         return usuarioRepository.save(existente);
     }
