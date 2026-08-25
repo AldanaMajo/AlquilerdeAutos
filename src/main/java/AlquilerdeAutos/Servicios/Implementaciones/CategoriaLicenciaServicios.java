@@ -2,7 +2,7 @@ package AlquilerdeAutos.Servicios.Implementaciones;
 
 import AlquilerdeAutos.Modelos.CategoriaLicencia;
 import AlquilerdeAutos.Repositorios.CategoriaLicenciaRepository;
-import AlquilerdeAutos.Servicios.Interfaces.IcategoriaLicenciaServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IcategorialicenciaServicios;
 import AlquilerdeAutos.Servicios.Interfaces.IcategorialicenciaServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoriaLicenciaServicios implements IcategoriaLicenciaServicios {
+public class CategoriaLicenciaServicios implements IcategorialicenciaServicios {
 
     private final CategoriaLicenciaRepository categoriaLicenciaRepository;
 
