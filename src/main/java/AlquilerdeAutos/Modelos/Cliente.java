@@ -23,6 +23,7 @@ public class Cliente {
     @Column(name = "Documento_identidad")
     private String Documento_identidad;
 
+
     @NotBlank(message = "El Nombre es Requerido")
     private String Nombre;
 
@@ -39,7 +40,7 @@ public class Cliente {
 
     @NotBlank(message = "El Numero de Licencia es Requerido")
     @Column(name = "Numero_licencia")
-    private String Numero_licencia;
+    private String NumeroLicencia;
 
     @NotNull(message = "La Categoria de Licencia es Requerida")
     @ManyToOne
@@ -54,11 +55,11 @@ public class Cliente {
         Id = id;
     }
 
-    public String getDocumento_identidad() {
+    public String getDocumentoIdentidad() {
         return Documento_identidad;
     }
 
-    public void setDocumento_identidad(String documento_identidad) {
+    public void setDocumentoIdentidad(String documento_identidad) {
         Documento_identidad = documento_identidad;
     }
 
@@ -102,16 +103,16 @@ public class Cliente {
         Direccion = direccion;
     }
 
-    public String getNumero_licencia() {
-        return Numero_licencia;
-    }
-
-    public void setNumero_licencia(String numero_licencia) {
-        Numero_licencia = numero_licencia;
-    }
-
     public CategoriaLicencia getCategoriaLicencia() {
         return categoriaLicencia;
+    }
+
+    public String getNumeroLicencia() {
+        return NumeroLicencia;
+    }
+
+    public void setNumeroLicencia(String numeroLicencia) {
+        NumeroLicencia = numeroLicencia;
     }
 
     public void setCategoriaLicencia(CategoriaLicencia categoriaLicencia) {

@@ -31,13 +31,13 @@ public class ClienteServicios implements IclienteServicios {
 
     @Override
     public Cliente buscarPorDocumento(String documentoIdentidad) {
-        return clienteRepository.findByDocumento_identidad(documentoIdentidad)
+        return clienteRepository.findByDocumentoIdentidad(documentoIdentidad)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con documento: " + documentoIdentidad));
     }
 
     @Override
     public Cliente guardar(Cliente cliente) {
-        if (clienteRepository.existsByDocumento_identidad(cliente.getDocumento_identidad())) {
+        if (clienteRepository.existsByDocumentoIdentidad(cliente.getDocumentoIdentidad())) {
             throw new RuntimeException("Ya existe un cliente con ese documento de identidad");
         }
         return clienteRepository.save(cliente);
@@ -51,7 +51,7 @@ public class ClienteServicios implements IclienteServicios {
         existente.setTelefono(cliente.getTelefono());
         existente.setEmail(cliente.getEmail());
         existente.setDireccion(cliente.getDireccion());
-        existente.setNumero_licencia(cliente.getNumero_licencia());
+        existente.setNumeroLicencia(cliente.getNumeroLicencia());
         existente.setCategoriaLicencia(cliente.getCategoriaLicencia());
         return clienteRepository.save(existente);
     }

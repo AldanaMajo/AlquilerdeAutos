@@ -1,0 +1,151 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      Layout:decorate="/Layout/Layout-Admin">
+
+
+<div layout:fragment="content">
+
+    <!-- Header Section -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center my-4 gap-3">
+        <div>
+            <h1 class="mt-2 h2 fw-bold text-dark">Gestión de Roles</h1>
+            <p class="text-muted mb-0">Administra los permisos y accesos del sistema</p>
+        </div>
+        <button class="btn btn-primary rounded-pill px-4 py-2 font-weight-bold d-flex align-items-center gap-2 shadow-sm">
+            <i class="fas fa-plus"></i>
+            Nuevo Rol
+        </button>
+    </div>
+
+    <!-- Stats Overview Bento Grid -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card bg-dark text-white border-0 rounded-3 shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-between p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="text-white-50 fw-semibold">Total Roles</span>
+                        <div class="rounded-circle bg-primary bg-opacity-20 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-user-shield text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="display-5 fw-bold">5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card bg-dark text-white border-0 rounded-3 shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-between p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="text-white-50 fw-semibold">Usuarios Activos</span>
+                        <div class="rounded-circle bg-info bg-opacity-20 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-users text-info"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex align-items-end gap-2">
+                        <span class="display-5 fw-bold">142</span>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 mb-2">+12%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card bg-dark text-white border-0 rounded-3 shadow-sm h-100 position-relative overflow-hidden">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-4 z-1">
+                    <i class="fas fa-shield-alt text-primary display-4 mb-2"></i>
+                    <h5 class="card-title text-white mb-0">Sistema Seguro</h5>
+                    <small class="text-white-50">Última auditoría: Hoy</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles Table -->
+    <div class="card bg-dark text-white border-0 rounded-3 shadow-sm overflow-hidden mb-4">
+        <div class="card-header bg-dark bg-opacity-50 border-bottom border-white border-opacity-10 p-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-white">Roles Registrados</h5>
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-filter text-white-50"></i>
+                <select class="form-select form-select-sm bg-dark text-white border-secondary" style="width: auto;">
+                    <option selected>Todos los estados</option>
+                    <option>Activos</option>
+                    <option>Inactivos</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0 border-white border-opacity-10">
+                <thead class="text-white-50 border-bottom border-white border-opacity-10">
+                <tr>
+                    <th class="py-3 px-4">Nombre del Rol</th>
+                    <th class="py-3 px-4">Nivel de Acceso</th>
+                    <th class="py-3 px-4">Usuarios Asignados</th>
+                    <th class="py-3 px-4">Estado</th>
+                    <th class="py-3 px-4 text-end">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="py-3 px-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded bg-primary bg-opacity-20 p-2 d-flex align-items-center justify-content-center text-primary" style="width: 32px; height: 32px;">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <span class="fw-semibold">Administrador Global</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-white-50">Acceso Total</td>
+                    <td class="py-3 px-4">3</td>
+                    <td class="py-3 px-4">
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">ACTIVO</span>
+                    </td>
+                    <td class="py-3 px-4 text-end">
+                        <button class="btn btn-sm btn-outline-light border-0" title="Editar">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="py-3 px-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded bg-info bg-opacity-20 p-2 d-flex align-items-center justify-content-center text-info" style="width: 32px; height: 32px;">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <span class="fw-semibold">Gestor de Flota</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-white-50">Vehículos, Marcas, Mantenimiento</td>
+                    <td class="py-3 px-4">12</td>
+                    <td class="py-3 px-4">
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">ACTIVO</span>
+                    </td>
+                    <td class="py-3 px-4 text-end">
+                        <button class="btn btn-sm btn-outline-light border-0" title="Editar">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer bg-dark bg-opacity-50 border-top border-white border-opacity-10 p-3 d-flex justify-content-between align-items-center text-white-50">
+            <span>Mostrando 1-2 de 5 roles</span>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-outline-secondary" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+>

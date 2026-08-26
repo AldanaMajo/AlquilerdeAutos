@@ -37,14 +37,14 @@ public class ReservaServicios implements IreservaServicios {
 
     @Override
     public Reserva buscarPorCodigo(String codigoReserva) {
-        return reservaRepository.findByCodigo_reserva(codigoReserva)
+        return reservaRepository.findByCodigoReserva(codigoReserva)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada con codigo: " + codigoReserva));
     }
 
     @Override
     public Reserva guardar(Reserva reserva) {
-        if (reserva.getCodigo_reserva() == null || reserva.getCodigo_reserva().isBlank()) {
-            reserva.setCodigo_reserva(generarCodigoReserva());
+        if (reserva.getCodigoReserva() == null || reserva.getCodigoReserva().isBlank()) {
+            reserva.setCodigoReserva(generarCodigoReserva());
         }
         if (reserva.getEstado() == null) {
             reserva.setEstado(Reserva.EstadoReserva.PENDIENTE);

@@ -43,7 +43,7 @@ public class PagoServicios implements IpagoServicios {
     public Pago actualizar(Integer id, Pago pago) {
         Pago existente = buscarPorId(id);
         existente.setMonto(pago.getMonto());
-        existente.setMetodo_pago(pago.getMetodo_pago());
+        existente.setMetodoPago(pago.getMetodoPago());
         existente.setAlquiler(pago.getAlquiler());
         return pagoRepository.save(existente);
     }

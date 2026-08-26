@@ -2,14 +2,16 @@ package AlquilerdeAutos.Repositorios;
 
 import AlquilerdeAutos.Modelos.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
-    Optional<Cliente> findByDocumento_identidad(String documentoIdentidad);
+    Optional<Cliente> findByDocumentoIdentidad(String documentoIdentidad);
 
-    Optional<Cliente> findByNumero_licencia(String numeroLicencia);
+    Optional<Cliente> findByNumeroLicencia(String numeroLicencia);
 
-    boolean existsByDocumento_identidad(String documentoIdentidad);
+    boolean existsByDocumentoIdentidad(String documentoIdentidad);
 }

@@ -77,11 +77,11 @@ public class Pago {
         Fecha_pago = fecha_pago;
     }
 
-    public MetodoPago getMetodo_pago() {
+    public MetodoPago getMetodoPago() {
         return Metodo_pago;
     }
 
-    public void setMetodo_pago(MetodoPago metodo_pago) {
+    public void setMetodoPago(MetodoPago metodo_pago) {
         Metodo_pago = metodo_pago;
     }
 

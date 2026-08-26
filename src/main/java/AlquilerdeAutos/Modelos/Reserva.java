@@ -80,11 +80,11 @@ public class Reserva {
         Id = id;
     }
 
-    public String getCodigo_reserva() {
+    public String getCodigoReserva() {
         return Codigo_reserva;
     }
 
-    public void setCodigo_reserva(String codigo_reserva) {
+    public void setCodigoReserva(String codigo_reserva) {
         Codigo_reserva = codigo_reserva;
     }
 

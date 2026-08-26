@@ -57,11 +57,13 @@
 		</dependency>
 
 		<!-- Thymeleaf Layout -->
+
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>
-			<version>4.0.1</version>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
+
 
 		<!-- DevTools -->
 		<dependency>
