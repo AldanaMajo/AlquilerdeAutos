@@ -46,4 +46,9 @@ public class RolServicios implements IrolServicios {
         buscarPorId(id);
         rolRepository.deleteById(id);
     }
+
+    @Override
+    public List<Rol> buscarPorNombre(String nombre) {
+        return rolRepository.findByNombreContainingIgnoreCase(nombre);
+    }
 }

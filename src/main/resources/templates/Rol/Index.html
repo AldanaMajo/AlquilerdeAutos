@@ -1,151 +1,198 @@
-<html lang="en"
+<html lang="es"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      Layout:decorate="/Layout/Layout-Admin">
-
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{Layout/Layout-Admin}">
 
 <div layout:fragment="content">
 
-    <!-- Header Section -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center my-4 gap-3">
         <div>
-            <h1 class="mt-2 h2 fw-bold text-dark">Gestión de Roles</h1>
-            <p class="text-muted mb-0">Administra los permisos y accesos del sistema</p>
+            <h2 class="fw-bold text-dark mb-1">Gestión de Roles</h2>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 py-2 font-weight-bold d-flex align-items-center gap-2 shadow-sm">
-            <i class="fas fa-plus"></i>
-            Nuevo Rol
+        <button type="button"
+                class="btn btn-primary px-3 py-2 rounded-3 fw-semibold shadow-sm"
+                style="background-color: #4f46e5; border: none;"
+                data-bs-toggle="modal"
+                data-bs-target="#modalNuevoRol">
+            <i class="fas fa-plus me-1"></i> Nuevo Rol
         </button>
     </div>
 
-    <!-- Stats Overview Bento Grid -->
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-md-4">
-            <div class="card bg-dark text-white border-0 rounded-3 shadow-sm h-100">
-                <div class="card-body d-flex flex-column justify-content-between p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <span class="text-white-50 fw-semibold">Total Roles</span>
-                        <div class="rounded-circle bg-primary bg-opacity-20 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="fas fa-user-shield text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <span class="display-5 fw-bold">5</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
 
-        <div class="col-12 col-md-4">
-            <div class="card bg-dark text-white border-0 rounded-3 shadow-sm h-100">
-                <div class="card-body d-flex flex-column justify-content-between p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <span class="text-white-50 fw-semibold">Usuarios Activos</span>
-                        <div class="rounded-circle bg-info bg-opacity-20 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="fas fa-users text-info"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-flex align-items-end gap-2">
-                        <span class="display-5 fw-bold">142</span>
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 mb-2">+12%</span>
-                    </div>
-                </div>
+        <!-- Buscador -->
+        <form th:action="@{/Rol/Index}" method="get" class="p-3 bg-white border-bottom m-0">
+            <div class="input-group" style="max-width: 320px;">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text"
+                       name="buscar"
+                       th:value="${buscar}"
+                       class="form-control bg-light border-start-0 ps-0 text-secondary"
+                       placeholder="Buscar roles..."
+                       style="box-shadow: none;">
+                <button type="submit" class="d-none"></button>
             </div>
-        </div>
+        </form>
 
-        <div class="col-12 col-md-4">
-            <div class="card bg-dark text-white border-0 rounded-3 shadow-sm h-100 position-relative overflow-hidden">
-                <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-4 z-1">
-                    <i class="fas fa-shield-alt text-primary display-4 mb-2"></i>
-                    <h5 class="card-title text-white mb-0">Sistema Seguro</h5>
-                    <small class="text-white-50">Última auditoría: Hoy</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Roles Table -->
-    <div class="card bg-dark text-white border-0 rounded-3 shadow-sm overflow-hidden mb-4">
-        <div class="card-header bg-dark bg-opacity-50 border-bottom border-white border-opacity-10 p-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 text-white">Roles Registrados</h5>
-            <div class="d-flex align-items-center gap-2">
-                <i class="fas fa-filter text-white-50"></i>
-                <select class="form-select form-select-sm bg-dark text-white border-secondary" style="width: auto;">
-                    <option selected>Todos los estados</option>
-                    <option>Activos</option>
-                    <option>Inactivos</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle mb-0 border-white border-opacity-10">
-                <thead class="text-white-50 border-bottom border-white border-opacity-10">
+        <div class="table-responsive tb-bg-index">
+            <table class="table align-middle mb-0 text-secondary tabla-b" style="font-size: 0.9rem;">
+                <thead class="bg-light text-uppercase fw-bold text-muted border-bottom" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                 <tr>
+                    <th class="py-3 px-4">ID</th>
                     <th class="py-3 px-4">Nombre del Rol</th>
-                    <th class="py-3 px-4">Nivel de Acceso</th>
-                    <th class="py-3 px-4">Usuarios Asignados</th>
-                    <th class="py-3 px-4">Estado</th>
-                    <th class="py-3 px-4 text-end">Acciones</th>
+                    <th class="py-3 px-4 text-center">Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
+                <tbody class="bg-white">
+                <tr class="border-bottom" th:each="rol : ${roles}">
+                    <td class="py-3 px-4" th:text="${rol.id}">1</td>
                     <td class="py-3 px-4">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded bg-primary bg-opacity-20 p-2 d-flex align-items-center justify-content-center text-primary" style="width: 32px; height: 32px;">
-                                <i class="fas fa-user-shield"></i>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #eef2ff; color: #4f46e5;">
+                                <i class="fas fa-user-tag"></i>
                             </div>
-                            <span class="fw-semibold">Administrador Global</span>
+                            <span class="fw-bold text-dark" th:text="${rol.nombre}">Nombre Rol</span>
                         </div>
                     </td>
-                    <td class="py-3 px-4 text-white-50">Acceso Total</td>
-                    <td class="py-3 px-4">3</td>
-                    <td class="py-3 px-4">
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">ACTIVO</span>
-                    </td>
-                    <td class="py-3 px-4 text-end">
-                        <button class="btn btn-sm btn-outline-light border-0" title="Editar">
+                    <td class="py-3 px-4 text-center">
+                        <!-- Botón Editar -->
+                        <button class="btn btn-link text-primary p-0 border-0 me-2"
+                                title="Editar"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEditarRol"
+                                th:data-id="${rol.id}"
+                                th:data-nombre="${rol.nombre}">
                             <i class="fas fa-pen"></i>
+                        </button>
+                        <!-- Botón Eliminar -->
+                        <button class="btn btn-link text-danger p-0 border-0"
+                                title="Eliminar"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEliminarRol"
+                                th:data-id="${rol.id}"
+                                th:data-nombre="${rol.nombre}">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 </tr>
-                <tr>
-                    <td class="py-3 px-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded bg-info bg-opacity-20 p-2 d-flex align-items-center justify-content-center text-info" style="width: 32px; height: 32px;">
-                                <i class="fas fa-car"></i>
-                            </div>
-                            <span class="fw-semibold">Gestor de Flota</span>
-                        </div>
-                    </td>
-                    <td class="py-3 px-4 text-white-50">Vehículos, Marcas, Mantenimiento</td>
-                    <td class="py-3 px-4">12</td>
-                    <td class="py-3 px-4">
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">ACTIVO</span>
-                    </td>
-                    <td class="py-3 px-4 text-end">
-                        <button class="btn btn-sm btn-outline-light border-0" title="Editar">
-                            <i class="fas fa-pen"></i>
-                        </button>
+                <tr th:if="${#lists.isEmpty(roles)}">
+                    <td colspan="3" class="text-center py-4 text-muted">
+                        No se encontraron roles que coincidan con la búsqueda.
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="card-footer bg-dark bg-opacity-50 border-top border-white border-opacity-10 p-3 d-flex justify-content-between align-items-center text-white-50">
-            <span>Mostrando 1-2 de 5 roles</span>
-            <div class="btn-group">
-                <button class="btn btn-sm btn-outline-secondary" disabled>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+        <div class="p-3 bg-white d-flex justify-content-between align-items-center text-muted small">
+            <span>
+                Mostrando <strong th:text="${#lists.size(roles)}">0</strong> roles
+            </span>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" disabled><i class="fas fa-chevron-left"></i></button>
+                <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" disabled><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL 1: AGREGAR NUEVO ROL -->
+    <div class="modal fade" id="modalNuevoRol" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">Nuevo Rol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/Rol/Guardar}" th:object="${nuevoRol}" method="post">
+                    <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label for="nombreNuevo" class="form-label fw-semibold text-secondary small">Nombre del Rol</label>
+                            <input type="text" id="nombreNuevo" th:field="*{nombre}" class="form-control" placeholder="Ej: ADMINISTRADOR" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 pt-0">
+                        <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary px-3 fw-semibold" style="background-color: #4f46e5; border: none;">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-</div>
+    <!-- MODAL 2: EDITAR ROL -->
+    <div class="modal fade" id="modalEditarRol" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">Editar Rol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/Rol/Editar}" method="post">
+                    <div class="modal-body py-4">
+                        <input type="hidden" id="editarId" name="id">
+                        <div class="mb-3">
+                            <label for="editarNombre" class="form-label fw-semibold text-secondary small">Nombre del Rol</label>
+                            <input type="text" id="editarNombre" name="nombre" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 pt-0">
+                        <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary px-3 fw-semibold" style="background-color: #4f46e5; border: none;">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
->
+    <!-- MODAL 3: CONFIRMAR ELIMINACIÓN -->
+    <div class="modal fade" id="modalEliminarRol" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="text-secondary mb-0">¿Estás seguro de que deseas eliminar el rol <strong id="eliminarNombre" class="text-dark"></strong>?</p>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="btnConfirmarEliminar" href="#" class="btn btn-danger px-3 fw-semibold">Eliminar</a>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- SCRIPT PARA CARGAR DATOS EN LOS MODALES -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Modal Editar
+            const modalEditar = document.getElementById('modalEditarRol');
+            modalEditar.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const nombre = button.getAttribute('data-nombre');
+
+                document.getElementById('editarId').value = id;
+                document.getElementById('editarNombre').value = nombre;
+            });
+
+            // Modal Eliminar
+            const modalEliminar = document.getElementById('modalEliminarRol');
+            modalEliminar.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const nombre = button.getAttribute('data-nombre');
+
+                document.getElementById('eliminarNombre').textContent = nombre;
+                document.getElementById('btnConfirmarEliminar').href = '/Rol/Eliminar/' + id;
+            });
+        });
+    </script>
+
+</div>
+    </div>
+</html>
