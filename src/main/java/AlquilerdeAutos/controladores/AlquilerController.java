@@ -2,16 +2,15 @@ package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Alquiler;
 import AlquilerdeAutos.Servicios.Interfaces.IalquilerServicios;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/alquileres")
+@Controller
+@RequestMapping("/Alquiler")
 public class AlquilerController {
 
     private final IalquilerServicios alquilerService;
@@ -21,61 +20,80 @@ public class AlquilerController {
         this.alquilerService = alquilerService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Alquiler>> listar() {
-        return ResponseEntity.ok(alquilerService.listar());
-    }
+    // MOSTRAR INDEX
+    @GetMapping("/Index")
+    public String index(
+            @RequestParam(required = false) String buscar,
+            Model model) {
 
-    @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<List<Alquiler>> listarPorCliente(@PathVariable Integer idCliente) {
-        return ResponseEntity.ok(alquilerService.listarPorCliente(idCliente));
-    }
+        List<Alquiler> alquileres = alquilerService.listar();
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(alquilerService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        // BUSCADOR
+        if (buscar != null && !buscar.trim().isEmpty()) {
+
+            String texto = buscar.trim().toLowerCase();
+
+            alquileres = alquileres.stream()
+                    .filter(alquiler ->
+                            String.valueOf(alquiler.getId())
+                                    .contains(texto)
+                    )
+                    .toList();
         }
+
+        model.addAttribute("alquileres", alquileres);
+        model.addAttribute("buscar", buscar);
+
+        return "Alquiler/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<Alquiler> guardar(@Valid @RequestBody Alquiler alquiler) {
-        Alquiler creado = alquilerService.guardar(alquiler);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+    // GUARDAR
+    @PostMapping("/Guardar")
+    public String guardar(@ModelAttribute Alquiler alquiler) {
+
+        alquilerService.guardar(alquiler);
+
+        return "redirect:/Alquiler/Index";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Alquiler alquiler) {
-        try {
-            return ResponseEntity.ok(alquilerService.actualizar(id, alquiler));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    // EDITAR
+    @PostMapping("/Editar")
+    public String editar(
+            @RequestParam Integer id,
+            @ModelAttribute Alquiler alquiler) {
+
+        alquilerService.actualizar(id, alquiler);
+
+        return "redirect:/Alquiler/Index";
     }
 
-    @PutMapping("/{id}/finalizar")
-    public ResponseEntity<?> finalizar(@PathVariable Integer id, @RequestParam Integer kilometrajeFinal) {
-        try {
-            return ResponseEntity.ok(alquilerService.finalizar(id, kilometrajeFinal));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    // FINALIZAR
+    @PostMapping("/Finalizar")
+    public String finalizar(
+            @RequestParam Integer id,
+            @RequestParam Integer kilometrajeFinal) {
+
+        alquilerService.finalizar(id, kilometrajeFinal);
+
+        return "redirect:/Alquiler/Index";
     }
 
-    @PutMapping("/{id}/cancelar")
-    public ResponseEntity<?> cancelar(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(alquilerService.cancelar(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    // CANCELAR
+    @GetMapping("/Cancelar/{id}")
+    public String cancelar(@PathVariable Integer id) {
+
+        alquilerService.cancelar(id);
+
+        return "redirect:/Alquiler/Index";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    // ELIMINAR
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable Integer id) {
+
         alquilerService.eliminar(id);
-        return ResponseEntity.noContent().build();
+
+        return "redirect:/Alquiler/Index";
     }
 }
+

@@ -2,57 +2,87 @@ package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.CategoriaLicencia;
 import AlquilerdeAutos.Servicios.Interfaces.IcategorialicenciaServicios;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/categorias-licencia")
+@Controller
+@RequestMapping("/CategoriaLicencia")
 public class CategoriaLicenciaController {
 
     private final IcategorialicenciaServicios categoriaLicenciaService;
 
     @Autowired
-    public CategoriaLicenciaController(IcategorialicenciaServicios categorialicenciaService) {
-        this.categoriaLicenciaService = categorialicenciaService;
+    public CategoriaLicenciaController(
+            IcategorialicenciaServicios categoriaLicenciaService) {
+        this.categoriaLicenciaService = categoriaLicenciaService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CategoriaLicencia>> listar() {
-        return ResponseEntity.ok(categoriaLicenciaService.listar());
-    }
+    // MOSTRAR INDEX
+    @GetMapping("/Index")
+    public String index(
+            @RequestParam(required = false) String buscar,
+            Model model) {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(categoriaLicenciaService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        List<CategoriaLicencia> categorias =
+                categoriaLicenciaService.listar();
+
+        // Filtrar por nombre si se realizó una búsqueda
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            String texto = buscar.trim().toLowerCase();
+
+            categorias = categorias.stream()
+                    .filter(categoria ->
+                            categoria.getNombre() != null &&
+                                    categoria.getNombre()
+                                            .toLowerCase()
+                                            .contains(texto))
+                    .toList();
         }
+
+        model.addAttribute("categorias", categorias);
+        model.addAttribute("buscar", buscar);
+
+        return "CategoriaLicencia/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<CategoriaLicencia> guardar(@Valid @RequestBody CategoriaLicencia categoriaLicencia) {
-        CategoriaLicencia creada = categoriaLicenciaService.guardar(categoriaLicencia);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
+    // GUARDAR
+    @PostMapping("/Guardar")
+    public String guardar(
+            @RequestParam String nombre) {
+
+        CategoriaLicencia categoria = new CategoriaLicencia();
+        categoria.setNombre(nombre);
+
+        categoriaLicenciaService.guardar(categoria);
+
+        return "redirect:/CategoriaLicencia/Index";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody CategoriaLicencia categoriaLicencia) {
-        try {
-            return ResponseEntity.ok(categoriaLicenciaService.actualizar(id, categoriaLicencia));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    // EDITAR
+    @PostMapping("/Editar")
+    public String editar(
+            @RequestParam Integer id,
+            @RequestParam String nombre) {
+
+        CategoriaLicencia categoria = new CategoriaLicencia();
+        categoria.setNombre(nombre);
+
+        categoriaLicenciaService.actualizar(id, categoria);
+
+        return "redirect:/CategoriaLicencia/Index";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    // ELIMINAR
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(
+            @PathVariable Integer id) {
+
         categoriaLicenciaService.eliminar(id);
-        return ResponseEntity.noContent().build();
+
+        return "redirect:/CategoriaLicencia/Index";
     }
 }
