@@ -1,13 +1,6 @@
 package AlquilerdeAutos.Modelos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,32 +8,32 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "clientes")
 public class Cliente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @NotBlank(message = "El Documento de Identidad es Requerido")
     @Column(name = "Documento_identidad")
-    private String Documento_identidad;
-
+    private String documentoIdentidad;
 
     @NotBlank(message = "El Nombre es Requerido")
-    private String Nombre;
+    private String nombre;
 
     @NotBlank(message = "El Apellido es Requerido")
-    private String Apellido;
+    private String apellido;
 
-    private String Telefono;
+    private String telefono;
 
     @NotBlank(message = "El Email es Requerido")
     @Email(message = "El Email debe ser valido")
-    private String Email;
+    private String email;
 
-    private String Direccion;
+    private String direccion;
 
     @NotBlank(message = "El Numero de Licencia es Requerido")
     @Column(name = "Numero_licencia")
-    private String NumeroLicencia;
+    private String numeroLicencia;
 
     @NotNull(message = "La Categoria de Licencia es Requerida")
     @ManyToOne
@@ -48,71 +41,71 @@ public class Cliente {
     private CategoriaLicencia categoriaLicencia;
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getDocumentoIdentidad() {
-        return Documento_identidad;
+        return documentoIdentidad;
     }
 
-    public void setDocumentoIdentidad(String documento_identidad) {
-        Documento_identidad = documento_identidad;
+    public void setDocumentoIdentidad(String documentoIdentidad) {
+        this.documentoIdentidad = documentoIdentidad;
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String nombre) {
-        Nombre = nombre;
+        this.nombre = nombre;
     }
 
     public String getApellido() {
-        return Apellido;
+        return apellido;
     }
 
     public void setApellido(String apellido) {
-        Apellido = apellido;
+        this.apellido = apellido;
     }
 
     public String getTelefono() {
-        return Telefono;
+        return telefono;
     }
 
     public void setTelefono(String telefono) {
-        Telefono = telefono;
+        this.telefono = telefono;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getDireccion() {
-        return Direccion;
+        return direccion;
     }
 
     public void setDireccion(String direccion) {
-        Direccion = direccion;
+        this.direccion = direccion;
+    }
+
+    public String getNumeroLicencia() {
+        return numeroLicencia;
+    }
+
+    public void setNumeroLicencia(String numeroLicencia) {
+        this.numeroLicencia = numeroLicencia;
     }
 
     public CategoriaLicencia getCategoriaLicencia() {
         return categoriaLicencia;
-    }
-
-    public String getNumeroLicencia() {
-        return NumeroLicencia;
-    }
-
-    public void setNumeroLicencia(String numeroLicencia) {
-        NumeroLicencia = numeroLicencia;
     }
 
     public void setCategoriaLicencia(CategoriaLicencia categoriaLicencia) {

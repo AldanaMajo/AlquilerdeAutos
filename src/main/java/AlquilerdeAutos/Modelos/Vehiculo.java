@@ -100,7 +100,10 @@ public class Vehiculo {
     }
 
     public BigDecimal getPrecio_por_dia() {
-        return Precio_por_dia;
+        if (this.categoria != null) {
+            return this.categoria.getTarifa_base_diaria();
+        }
+        return BigDecimal.ZERO;
     }
 
     public void setPrecio_por_dia(BigDecimal precio_por_dia) {

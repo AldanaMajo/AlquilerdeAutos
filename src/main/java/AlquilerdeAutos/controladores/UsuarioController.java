@@ -1,71 +1,65 @@
 package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Usuario;
+import AlquilerdeAutos.Servicios.Interfaces.IrolServicios; // Asegúrate de tener la interfaz de Roles
 import AlquilerdeAutos.Servicios.Interfaces.IusuarioServicios;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/usuarios")
+@Controller
+@RequestMapping("/Usuario")
 public class UsuarioController {
 
     private final IusuarioServicios usuarioService;
+    private final IrolServicios rolService; // Para cargar el selector de roles en los modales
 
     @Autowired
-    public UsuarioController(IusuarioServicios usuarioService) {
+    public UsuarioController(IusuarioServicios usuarioService, IrolServicios rolService) {
         this.usuarioService = usuarioService;
+        this.rolService = rolService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Usuario>> listar() {
-        return ResponseEntity.ok(usuarioService.listar());
+    @GetMapping("/Index")
+    public String index(Model model) {
+        model.addAttribute("usuarios", usuarioService.listar());
+        model.addAttribute("roles", rolService.listar());
+        model.addAttribute("nuevoUsuario", new Usuario());
+        return "Usuario/Index"; // Ajusta la ruta a tu carpeta de vistas
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    @PostMapping("/Guardar")
+    public String guardar(@ModelAttribute("nuevoUsuario") Usuario usuario, RedirectAttributes redirect) {
         try {
-            return ResponseEntity.ok(usuarioService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            usuarioService.guardar(usuario);
+            redirect.addFlashAttribute("success", "Usuario creado con éxito");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", e.getMessage());
         }
+        return "redirect:/Usuario/Index";
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<?> buscarPorEmail(@PathVariable String email) {
+    @PostMapping("/Editar")
+    public String editar(@ModelAttribute Usuario usuario, RedirectAttributes redirect) {
         try {
-            return ResponseEntity.ok(usuarioService.buscarPorEmail(email));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            usuarioService.actualizar(usuario.getId(), usuario);
+            redirect.addFlashAttribute("success", "Usuario actualizado correctamente");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", e.getMessage());
         }
+        return "redirect:/Usuario/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@Valid @RequestBody Usuario usuario) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable Integer id, RedirectAttributes redirect) {
         try {
-            Usuario creado = usuarioService.guardar(usuario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(creado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            usuarioService.eliminar(id);
+            redirect.addFlashAttribute("success", "Usuario eliminado correctamente");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al eliminar usuario");
         }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Usuario usuario) {
-        try {
-            return ResponseEntity.ok(usuarioService.actualizar(id, usuario));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        usuarioService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/Usuario/Index";
     }
 }

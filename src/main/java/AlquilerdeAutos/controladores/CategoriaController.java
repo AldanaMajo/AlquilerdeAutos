@@ -2,16 +2,13 @@ package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Categoria;
 import AlquilerdeAutos.Servicios.Interfaces.IcategoriaServicios;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/categorias")
+@Controller
+@RequestMapping("/Categoria")
 public class CategoriaController {
 
     private final IcategoriaServicios categoriaService;
@@ -21,38 +18,28 @@ public class CategoriaController {
         this.categoriaService = categoriaService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Categoria>> listar() {
-        return ResponseEntity.ok(categoriaService.listar());
+    @GetMapping("/Index")
+    public String index(Model model) {
+        model.addAttribute("categorias", categoriaService.listar());
+        model.addAttribute("nuevaCategoria", new Categoria());
+        return "Categoria/Index"; // Ruta a tu archivo HTML dentro de templates
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(categoriaService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/Guardar")
+    public String guardar(@ModelAttribute("nuevaCategoria") Categoria categoria) {
+        categoriaService.guardar(categoria);
+        return "redirect:/Categoria/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<Categoria> guardar(@Valid @RequestBody Categoria categoria) {
-        Categoria creada = categoriaService.guardar(categoria);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
+    @PostMapping("/Editar")
+    public String editar(@ModelAttribute Categoria categoria) {
+        categoriaService.actualizar(categoria.getId(), categoria);
+        return "redirect:/Categoria/Index";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Categoria categoria) {
-        try {
-            return ResponseEntity.ok(categoriaService.actualizar(id, categoria));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable Integer id) {
         categoriaService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/Categoria/Index";
     }
 }

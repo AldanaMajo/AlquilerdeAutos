@@ -1,11 +1,11 @@
 package AlquilerdeAutos.Servicios.Interfaces;
 
 import AlquilerdeAutos.Modelos.Cliente;
-
 import java.util.List;
 
 public interface IclienteServicios {
     List<Cliente> listar();
+    List<Cliente> buscarPorFiltro(String filtro);
     Cliente buscarPorId(Integer id);
     Cliente buscarPorDocumento(String documentoIdentidad);
     Cliente guardar(Cliente cliente);

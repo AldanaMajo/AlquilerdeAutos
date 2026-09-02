@@ -24,6 +24,14 @@ public class ClienteServicios implements IclienteServicios {
     }
 
     @Override
+    public List<Cliente> buscarPorFiltro(String filtro) {
+        if (filtro == null || filtro.trim().isEmpty()) {
+            return clienteRepository.findAll();
+        }
+        return clienteRepository.buscarPorFiltro(filtro);
+    }
+
+    @Override
     public Cliente buscarPorId(Integer id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
@@ -37,7 +45,8 @@ public class ClienteServicios implements IclienteServicios {
 
     @Override
     public Cliente guardar(Cliente cliente) {
-        if (clienteRepository.existsByDocumentoIdentidad(cliente.getDocumentoIdentidad())) {
+        // Validar duplicado de documento SOLO si es un cliente nuevo (creación)
+        if (cliente.getId() == null && clienteRepository.existsByDocumentoIdentidad(cliente.getDocumentoIdentidad())) {
             throw new RuntimeException("Ya existe un cliente con ese documento de identidad");
         }
         return clienteRepository.save(cliente);
@@ -48,6 +57,7 @@ public class ClienteServicios implements IclienteServicios {
         Cliente existente = buscarPorId(id);
         existente.setNombre(cliente.getNombre());
         existente.setApellido(cliente.getApellido());
+        existente.setDocumentoIdentidad(cliente.getDocumentoIdentidad());
         existente.setTelefono(cliente.getTelefono());
         existente.setEmail(cliente.getEmail());
         existente.setDireccion(cliente.getDireccion());

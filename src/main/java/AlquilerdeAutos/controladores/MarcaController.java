@@ -2,16 +2,17 @@ package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Marca;
 import AlquilerdeAutos.Servicios.Interfaces.ImarcaServicios;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/marcas")
+@Controller
+@RequestMapping("/Marca")
 public class MarcaController {
 
     private final ImarcaServicios marcaService;
@@ -21,38 +22,40 @@ public class MarcaController {
         this.marcaService = marcaService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Marca>> listar() {
-        return ResponseEntity.ok(marcaService.listar());
-    }
+    @GetMapping({"", "/", "/Index"})
+    public String index(@RequestParam(name = "buscar", required = false) String buscar, Model model) {
+        List<Marca> marcas = marcaService.listar();
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(marcaService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            marcas = marcas.stream()
+                    .filter(m -> m.getNombre().toLowerCase().contains(buscar.toLowerCase()))
+                    .collect(Collectors.toList());
+            model.addAttribute("buscar", buscar);
         }
+
+        model.addAttribute("marcas", marcas);
+        model.addAttribute("nuevaMarca", new Marca());
+        return "Marca/Index"; // O la ruta donde guardes tu vista de Marca
     }
 
-    @PostMapping
-    public ResponseEntity<Marca> guardar(@Valid @RequestBody Marca marca) {
-        Marca creada = marcaService.guardar(marca);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
+    @PostMapping("/Guardar")
+    public String guardar(@ModelAttribute("nuevaMarca") Marca marca, RedirectAttributes redirectAttributes) {
+        marcaService.guardar(marca);
+        redirectAttributes.addFlashAttribute("mensaje", "Marca guardada con éxito");
+        return "redirect:/Marca/Index";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Marca marca) {
-        try {
-            return ResponseEntity.ok(marcaService.actualizar(id, marca));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/Editar")
+    public String editar(@ModelAttribute("marca") Marca marca, RedirectAttributes redirectAttributes) {
+        marcaService.actualizar(marca.getId(), marca);
+        redirectAttributes.addFlashAttribute("mensaje", "Marca actualizada con éxito");
+        return "redirect:/Marca/Index";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         marcaService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        redirectAttributes.addFlashAttribute("mensaje", "Marca eliminada con éxito");
+        return "redirect:/Marca/Index";
     }
 }

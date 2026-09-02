@@ -1,71 +1,51 @@
 package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Cliente;
+import AlquilerdeAutos.Servicios.Interfaces.IcategorialicenciaServicios;
 import AlquilerdeAutos.Servicios.Interfaces.IclienteServicios;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/clientes")
+@Controller
+@RequestMapping("/Cliente")
 public class ClienteController {
 
     private final IclienteServicios clienteService;
+    private final IcategorialicenciaServicios categoriaService;
 
     @Autowired
-    public ClienteController(IclienteServicios clienteService) {
+    public ClienteController(IclienteServicios clienteService, IcategorialicenciaServicios categoriaService) {
         this.clienteService = clienteService;
+        this.categoriaService = categoriaService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Cliente>> listar() {
-        return ResponseEntity.ok(clienteService.listar());
+    @GetMapping("/Index")
+    public String index(@RequestParam(name = "buscar", required = false) String buscar, Model model) {
+        model.addAttribute("clientes", clienteService.buscarPorFiltro(buscar));
+        model.addAttribute("buscar", buscar);
+        model.addAttribute("nuevoCliente", new Cliente());
+        model.addAttribute("categorias", categoriaService.listar());
+
+        return "Cliente/Index";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(clienteService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/Guardar")
+    public String guardar(@ModelAttribute("nuevoCliente") Cliente cliente) {
+        clienteService.guardar(cliente);
+        return "redirect:/Cliente/Index";
     }
 
-    @GetMapping("/documento/{documento}")
-    public ResponseEntity<?> buscarPorDocumento(@PathVariable String documento) {
-        try {
-            return ResponseEntity.ok(clienteService.buscarPorDocumento(documento));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/Editar")
+    public String editar(@ModelAttribute Cliente cliente) {
+        clienteService.actualizar(cliente.getId(), cliente);
+        return "redirect:/Cliente/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@Valid @RequestBody Cliente cliente) {
-        try {
-            Cliente creado = clienteService.guardar(cliente);
-            return ResponseEntity.status(HttpStatus.CREATED).body(creado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Cliente cliente) {
-        try {
-            return ResponseEntity.ok(clienteService.actualizar(id, cliente));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable("id") Integer id) {
         clienteService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/Cliente/Index";
     }
 }
