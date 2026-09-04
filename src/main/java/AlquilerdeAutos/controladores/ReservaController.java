@@ -1,90 +1,60 @@
 package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Reserva;
+import AlquilerdeAutos.Modelos.Cliente;
+import AlquilerdeAutos.Modelos.Vehiculo;
 import AlquilerdeAutos.Servicios.Interfaces.IreservaServicios;
-import jakarta.validation.Valid;
+import AlquilerdeAutos.Servicios.Interfaces.IclienteServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IvehiculoServicios;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/reservas")
+@Controller
+@RequestMapping("/Reserva")
 public class ReservaController {
 
     private final IreservaServicios reservaService;
+    private final IclienteServicios clienteService;
+    private final IvehiculoServicios vehiculoService;
 
     @Autowired
-    public ReservaController(IreservaServicios reservaService) {
+    public ReservaController(
+            IreservaServicios reservaService,
+            IclienteServicios clienteService,
+            IvehiculoServicios vehiculoService) {
+
         this.reservaService = reservaService;
+        this.clienteService = clienteService;
+        this.vehiculoService = vehiculoService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Reserva>> listar() {
-        return ResponseEntity.ok(reservaService.listar());
+    @GetMapping("/Index")
+    public String index(Model model) {
+        model.addAttribute("reservas", reservaService.listar());
+        model.addAttribute("clientes", clienteService.listar());
+        model.addAttribute("vehiculos", vehiculoService.listar());
+        model.addAttribute("nuevaReserva", new Reserva());
+
+        return "Reserva/Index";
     }
 
-    @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<List<Reserva>> listarPorCliente(@PathVariable Integer idCliente) {
-        return ResponseEntity.ok(reservaService.listarPorCliente(idCliente));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(reservaService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+    @PostMapping("/Guardar")
+    public String guardar(@ModelAttribute Reserva reserva) {
+        if (reserva.getId() != null) {
+            reservaService.actualizar(reserva.getId(), reserva);
+        } else {
+            reservaService.guardar(reserva);
         }
+
+        return "redirect:/Reserva/Index";
     }
 
-    @GetMapping("/codigo/{codigo}")
-    public ResponseEntity<?> buscarPorCodigo(@PathVariable String codigo) {
-        try {
-            return ResponseEntity.ok(reservaService.buscarPorCodigo(codigo));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping
-    public ResponseEntity<Reserva> guardar(@Valid @RequestBody Reserva reserva) {
-        Reserva creada = reservaService.guardar(reserva);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Reserva reserva) {
-        try {
-            return ResponseEntity.ok(reservaService.actualizar(id, reserva));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/confirmar")
-    public ResponseEntity<?> confirmar(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(reservaService.confirmar(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/cancelar")
-    public ResponseEntity<?> cancelar(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(reservaService.cancelar(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable Integer id) {
         reservaService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/Reserva/Index";
     }
 }
+
