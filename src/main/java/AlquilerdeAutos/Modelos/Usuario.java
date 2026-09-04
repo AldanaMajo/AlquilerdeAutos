@@ -20,26 +20,26 @@ import java.time.LocalDateTime;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id; // Cambiado Id -> id
 
     @NotBlank(message = "El Nombre es Requerido")
-    private String Nombre;
+    private String nombre; // Cambiado Nombre -> nombre
 
     @NotBlank(message = "El Apellido es Requerido")
-    private String Apellido;
+    private String apellido; // Cambiado Apellido -> apellido
 
     @NotBlank(message = "El Email es Requerido")
     @Email(message = "El Email debe ser valido")
-    private String Email;
+    private String email; // Cambiado Email -> email
 
     @NotBlank(message = "El Password es Requerido")
     @Column(name = "Password_hash")
-    private String Password_hash;
+    private String password_hash; // Cambiado Password_hash -> password_hash
 
-    private Boolean Activo = true;
+    private Boolean activo = true; // Cambiado Activo -> activo
 
     @Column(name = "Fecha_creacion", updatable = false)
-    private LocalDateTime Fecha_creacion;
+    private LocalDateTime fecha_creacion; // Cambiado Fecha_creacion -> fecha_creacion
 
     @NotNull(message = "El Rol es Requerido")
     @ManyToOne
@@ -48,65 +48,66 @@ public class Usuario {
 
     @PrePersist
     protected void onCreate() {
-        if (Fecha_creacion == null) {
-            Fecha_creacion = LocalDateTime.now();
+        if (fecha_creacion == null) {
+            fecha_creacion = LocalDateTime.now();
         }
     }
 
+    // Getters y Setters corregidos
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String nombre) {
-        Nombre = nombre;
+        this.nombre = nombre;
     }
 
     public String getApellido() {
-        return Apellido;
+        return apellido;
     }
 
     public void setApellido(String apellido) {
-        Apellido = apellido;
+        this.apellido = apellido;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getPassword_hash() {
-        return Password_hash;
+        return password_hash;
     }
 
     public void setPassword_hash(String password_hash) {
-        Password_hash = password_hash;
+        this.password_hash = password_hash;
     }
 
     public Boolean getActivo() {
-        return Activo;
+        return activo;
     }
 
     public void setActivo(Boolean activo) {
-        Activo = activo;
+        this.activo = activo;
     }
 
     public LocalDateTime getFecha_creacion() {
-        return Fecha_creacion;
+        return fecha_creacion;
     }
 
     public void setFecha_creacion(LocalDateTime fecha_creacion) {
-        Fecha_creacion = fecha_creacion;
+        this.fecha_creacion = fecha_creacion;
     }
 
     public Rol getRol() {

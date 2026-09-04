@@ -22,6 +22,7 @@ public class UsuarioController {
         this.rolService = rolService;
     }
 
+
     @GetMapping("/Index")
     public String index(Model model) {
         model.addAttribute("usuarios", usuarioService.listar());
@@ -30,12 +31,24 @@ public class UsuarioController {
         return "Usuario/Index"; // Ajusta la ruta a tu carpeta de vistas
     }
 
+    /*@PostMapping("/Guardar")
+    public String guardar(@ModelAttribute("nuevoUsuario") Usuario usuario, RedirectAttributes redirect) {
+        try {
+            usuarioService.guardar(usuario);
+            redirect.addFlashAttribute("success", "Usuario creado con éxito");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/Usuario/Index";
+    }*/
     @PostMapping("/Guardar")
     public String guardar(@ModelAttribute("nuevoUsuario") Usuario usuario, RedirectAttributes redirect) {
         try {
             usuarioService.guardar(usuario);
             redirect.addFlashAttribute("success", "Usuario creado con éxito");
         } catch (Exception e) {
+            // Imprime el error en la consola de tu IDE (IntelliJ / Eclipse / VS Code)
+            e.printStackTrace();
             redirect.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/Usuario/Index";

@@ -1,63 +1,58 @@
 package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Pago;
+import AlquilerdeAutos.Servicios.Interfaces.IalquilerServicios;
 import AlquilerdeAutos.Servicios.Interfaces.IpagoServicios;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/pagos")
+@Controller
+@RequestMapping("/Pago")
 public class PagoController {
 
     private final IpagoServicios pagoService;
+    private final IalquilerServicios alquilerService;
 
     @Autowired
-    public PagoController(IpagoServicios pagoService) {
+    public PagoController(IpagoServicios pagoService, IalquilerServicios alquilerService) {
         this.pagoService = pagoService;
+        this.alquilerService = alquilerService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Pago>> listar() {
-        return ResponseEntity.ok(pagoService.listar());
+    @GetMapping("/Index")
+    public String index(Model model) {
+        model.addAttribute("pagos", pagoService.listar());
+        model.addAttribute("nuevoPago", new Pago());
+        model.addAttribute("metodosPago", Pago.MetodoPago.values());
+        model.addAttribute("alquileres", alquilerService.listar());
+        return "Pago/Index";
     }
 
-    @GetMapping("/alquiler/{idAlquiler}")
-    public ResponseEntity<List<Pago>> listarPorAlquiler(@PathVariable Integer idAlquiler) {
-        return ResponseEntity.ok(pagoService.listarPorAlquiler(idAlquiler));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(pagoService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+    @PostMapping("/Guardar")
+    public String guardar(@Valid @ModelAttribute("nuevoPago") Pago pago, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("pagos", pagoService.listar());
+            model.addAttribute("metodosPago", Pago.MetodoPago.values());
+            model.addAttribute("alquileres", alquilerService.listar());
+            return "Pago/Index";
         }
+        pagoService.guardar(pago);
+        return "redirect:/Pago/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<Pago> guardar(@Valid @RequestBody Pago pago) {
-        Pago creado = pagoService.guardar(pago);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+    @PostMapping("/Editar")
+    public String actualizar(@Valid @ModelAttribute Pago pago) {
+        pagoService.actualizar(pago.getId(), pago);
+        return "redirect:/Pago/Index";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Pago pago) {
-        try {
-            return ResponseEntity.ok(pagoService.actualizar(id, pago));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable Integer id) {
         pagoService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/Pago/Index";
     }
 }

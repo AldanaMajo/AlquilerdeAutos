@@ -1,7 +1,9 @@
 package AlquilerdeAutos.Servicios.Implementaciones;
 
 import AlquilerdeAutos.Modelos.Alquiler;
+import AlquilerdeAutos.Modelos.Reserva;
 import AlquilerdeAutos.Repositorios.AlquilerRepository;
+import AlquilerdeAutos.Repositorios.ReservaRepository;
 import AlquilerdeAutos.Servicios.Interfaces.IalquilerServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ import java.util.List;
 public class AlquilerServicios implements IalquilerServicios {
 
     private final AlquilerRepository alquilerRepository;
+    private final ReservaRepository reservaRepository; // 1. Agregado
 
     @Autowired
-    public AlquilerServicios(AlquilerRepository alquilerRepository) {
+    public AlquilerServicios(AlquilerRepository alquilerRepository, ReservaRepository reservaRepository) { // 2. Agregado
         this.alquilerRepository = alquilerRepository;
+        this.reservaRepository = reservaRepository;
     }
 
     @Override
@@ -45,6 +49,16 @@ public class AlquilerServicios implements IalquilerServicios {
         if (alquiler.getEstado() == null) {
             alquiler.setEstado(Alquiler.EstadoAlquiler.EN_PROCESO);
         }
+
+        // 3. Validación de la Reserva para evitar el error TransientPropertyValueException
+        if (alquiler.getReserva() != null && alquiler.getReserva().getId() != null) {
+            Integer reservaId = alquiler.getReserva().getId();
+            Reserva reservaBD = reservaRepository.findById(reservaId).orElse(null);
+            alquiler.setReserva(reservaBD);
+        } else {
+            alquiler.setReserva(null);
+        }
+
         return alquilerRepository.save(alquiler);
     }
 
@@ -57,6 +71,16 @@ public class AlquilerServicios implements IalquilerServicios {
         existente.setCliente(alquiler.getCliente());
         existente.setVehiculo(alquiler.getVehiculo());
         existente.setUsuario(alquiler.getUsuario());
+
+        // Manejo de Reserva al actualizar
+        if (alquiler.getReserva() != null && alquiler.getReserva().getId() != null) {
+            Integer reservaId = alquiler.getReserva().getId();
+            Reserva reservaBD = reservaRepository.findById(reservaId).orElse(null);
+            existente.setReserva(reservaBD);
+        } else {
+            existente.setReserva(null);
+        }
+
         return alquilerRepository.save(existente);
     }
 

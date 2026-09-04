@@ -2,59 +2,59 @@ package AlquilerdeAutos.controladores;
 
 import AlquilerdeAutos.Modelos.Comprobante;
 import AlquilerdeAutos.Servicios.Interfaces.IcomprobanteServicios;
+import AlquilerdeAutos.Servicios.Interfaces.IpagoServicios;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/comprobantes")
+@Controller
+@RequestMapping("/Comprobante")
 public class ComprobanteController {
 
     private final IcomprobanteServicios comprobanteService;
+    private final IpagoServicios pagoService;
 
     @Autowired
-    public ComprobanteController(IcomprobanteServicios comprobanteService) {
+    public ComprobanteController(IcomprobanteServicios comprobanteService, IpagoServicios pagoService) {
         this.comprobanteService = comprobanteService;
+        this.pagoService = pagoService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(comprobanteService.buscarPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/Index")
+    public String index(@RequestParam(name = "buscar", required = false) String buscar, Model model) {
+        model.addAttribute("comprobantes", comprobanteService.obtenerTodos(buscar));
+        model.addAttribute("nuevoComprobante", new Comprobante());
+        model.addAttribute("tiposComprobante", Comprobante.TipoComprobante.values());
+        model.addAttribute("pagos", pagoService.listar()); // Carga la lista de pagos usando tu método listar()
+        model.addAttribute("buscar", buscar);
+        return "Comprobante/Index";
+    }
+
+    @PostMapping("/Guardar")
+    public String guardar(@Valid @ModelAttribute("nuevoComprobante") Comprobante comprobante,
+                          BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("comprobantes", comprobanteService.obtenerTodos(null));
+            model.addAttribute("tiposComprobante", Comprobante.TipoComprobante.values());
+            model.addAttribute("pagos", pagoService.listar());
+            return "Comprobante/Index";
         }
+        comprobanteService.guardar(comprobante);
+        return "redirect:/Comprobante/Index";
     }
 
-    @GetMapping("/pago/{idPago}")
-    public ResponseEntity<?> buscarPorPago(@PathVariable Integer idPago) {
-        try {
-            return ResponseEntity.ok(comprobanteService.buscarPorPago(idPago));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/Editar")
+    public String actualizar(@Valid @ModelAttribute Comprobante comprobante) {
+        comprobanteService.actualizar(comprobante.getId(), comprobante);
+        return "redirect:/Comprobante/Index";
     }
 
-    @PostMapping
-    public ResponseEntity<Comprobante> guardar(@Valid @RequestBody Comprobante comprobante) {
-        Comprobante creado = comprobanteService.guardar(comprobante);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Comprobante comprobante) {
-        try {
-            return ResponseEntity.ok(comprobanteService.actualizar(id, comprobante));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    @GetMapping("/Eliminar/{id}")
+    public String eliminar(@PathVariable Integer id) {
         comprobanteService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/Comprobante/Index";
     }
 }
