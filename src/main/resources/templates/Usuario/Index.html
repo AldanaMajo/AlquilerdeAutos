@@ -137,6 +137,10 @@
                 </div>
                 <form th:action="@{/Usuario/Guardar}" th:object="${nuevoUsuario}" method="post">
                     <div class="modal-body py-3">
+
+                        <!-- NUEVO: alerta de duplicados -->
+                        <div id="alertaDuplicadoNuevoUsuario" class="alert alert-warning d-none py-2 px-3 mb-3 small" role="alert"></div>
+
                         <div class="row g-2">
                             <div class="col-6 mb-3">
                                 <label for="nombreNuevo" class="form-label fw-semibold text-secondary small">Nombre</label>
@@ -187,6 +191,9 @@
                 <form th:action="@{/Usuario/Editar}" method="post">
                     <div class="modal-body py-3">
                         <input type="hidden" id="editarId" name="id">
+
+                        <!-- NUEVO: alerta de duplicados -->
+                        <div id="alertaDuplicadoEditarUsuario" class="alert alert-warning d-none py-2 px-3 mb-3 small" role="alert"></div>
 
                         <div class="row g-2">
                             <div class="col-6 mb-3">
@@ -283,6 +290,135 @@
             }
         });
     </script>
+
+    <!-- ======================= NUEVO: BLOQUE AGREGADO PARA ALERTA DE USUARIOS DUPLICADOS ======================= -->
+    <!-- No modifica nada de arriba; solo agrega datos y un script independiente. -->
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var usuariosExistentes = /*[[${usuarios}]]*/ [];
+        /*]]>*/
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            function normalizar(valor) {
+                return (valor || '').toString().trim().toLowerCase();
+            }
+
+            function buscarDuplicadoEmail(email, idExcluir) {
+                const emailNorm = normalizar(email);
+                if (!emailNorm) return null;
+                return usuariosExistentes.find(function (u) {
+                    if (idExcluir && String(u.id) === String(idExcluir)) return false;
+                    return normalizar(u.email) === emailNorm;
+                }) || null;
+            }
+
+            function buscarDuplicadoNombreCompleto(nombre, apellido, idExcluir) {
+                const completoNorm = normalizar(nombre) + ' ' + normalizar(apellido);
+                if (completoNorm.trim() === '') return null;
+                return usuariosExistentes.find(function (u) {
+                    if (idExcluir && String(u.id) === String(idExcluir)) return false;
+                    return (normalizar(u.nombre) + ' ' + normalizar(u.apellido)) === completoNorm;
+                }) || null;
+            }
+
+            function configurarValidacionDuplicadosUsuario(opts) {
+                const { nombreId, apellidoId, emailId, alertaId, getIdExcluir } = opts;
+                const alertaEl = document.getElementById(alertaId);
+                const nombreEl = document.getElementById(nombreId);
+                const apellidoEl = document.getElementById(apellidoId);
+                const emailEl = document.getElementById(emailId);
+
+                function actualizar() {
+                    const idExcluir = getIdExcluir ? getIdExcluir() : null;
+                    const mensajes = [];
+
+                    const dupEmail = buscarDuplicadoEmail(emailEl.value, idExcluir);
+                    if (dupEmail) {
+                        mensajes.push('Ya existe un usuario con el correo "' + emailEl.value + '" (' + dupEmail.nombre + ' ' + dupEmail.apellido + ').');
+                    }
+
+                    const dupNombre = buscarDuplicadoNombreCompleto(nombreEl.value, apellidoEl.value, idExcluir);
+                    if (dupNombre) {
+                        mensajes.push('Ya existe un usuario registrado con el nombre "' + nombreEl.value + ' ' + apellidoEl.value + '".');
+                    }
+
+                    if (mensajes.length > 0) {
+                        alertaEl.innerHTML = '<i class="fas fa-triangle-exclamation me-1"></i>' + mensajes.join('<br>');
+                        alertaEl.classList.remove('d-none');
+                    } else {
+                        alertaEl.classList.add('d-none');
+                    }
+                }
+
+                [nombreEl, apellidoEl, emailEl].forEach(function (el) {
+                    el.addEventListener('input', actualizar);
+                    el.addEventListener('blur', actualizar);
+                });
+
+                return actualizar;
+            }
+
+            // --- Nuevo Usuario ---
+            const validarNuevoUsuario = configurarValidacionDuplicadosUsuario({
+                nombreId: 'nombreNuevo',
+                apellidoId: 'apellidoNuevo',
+                emailId: 'emailNuevo',
+                alertaId: 'alertaDuplicadoNuevoUsuario'
+            });
+
+            const modalNuevoUsuarioEl = document.getElementById('modalNuevoUsuario');
+            if (modalNuevoUsuarioEl) {
+                modalNuevoUsuarioEl.addEventListener('show.bs.modal', function () {
+                    document.getElementById('alertaDuplicadoNuevoUsuario').classList.add('d-none');
+                });
+                const formNuevoUsuario = modalNuevoUsuarioEl.querySelector('form');
+                formNuevoUsuario.addEventListener('submit', function (e) {
+                    validarNuevoUsuario();
+                    const alertaEl = document.getElementById('alertaDuplicadoNuevoUsuario');
+                    if (!alertaEl.classList.contains('d-none')) {
+                        e.preventDefault();
+                        if (confirm('Se detectaron posibles usuarios duplicados. ¿Deseas guardar de todas formas?')) {
+                            e.target.submit();
+                        }
+                    }
+                });
+            }
+
+            // --- Editar Usuario ---
+            const modalEditarUsuarioEl = document.getElementById('modalEditarUsuario');
+            let validarEditarUsuario = null;
+            if (modalEditarUsuarioEl) {
+                modalEditarUsuarioEl.addEventListener('show.bs.modal', function () {
+                    document.getElementById('alertaDuplicadoEditarUsuario').classList.add('d-none');
+                    if (!validarEditarUsuario) {
+                        validarEditarUsuario = configurarValidacionDuplicadosUsuario({
+                            nombreId: 'editarNombre',
+                            apellidoId: 'editarApellido',
+                            emailId: 'editarEmail',
+                            alertaId: 'alertaDuplicadoEditarUsuario',
+                            getIdExcluir: function () { return document.getElementById('editarId').value; }
+                        });
+                    }
+                });
+                const formEditarUsuario = modalEditarUsuarioEl.querySelector('form');
+                formEditarUsuario.addEventListener('submit', function (e) {
+                    if (validarEditarUsuario) validarEditarUsuario();
+                    const alertaEl = document.getElementById('alertaDuplicadoEditarUsuario');
+                    if (!alertaEl.classList.contains('d-none')) {
+                        e.preventDefault();
+                        if (confirm('Se detectaron posibles usuarios duplicados. ¿Deseas actualizar de todas formas?')) {
+                            e.target.submit();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+    <!-- ======================= FIN BLOQUE AGREGADO ======================= -->
 
 </div>
 </html>

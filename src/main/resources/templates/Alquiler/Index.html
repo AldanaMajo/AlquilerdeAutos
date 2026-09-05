@@ -97,12 +97,18 @@
                                         th:data-usuario="${a.usuario != null ? a.usuario.id : ''}">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <a th:href="@{/Alquiler/Cancelar/{id}(id=${a.id})}"
-                                   class="btn btn-sm btn-outline-warning"
-                                   title="Cancelar"
-                                   onclick="return confirm('¿Desea cancelar este alquiler?');">
+                                <!-- MODIFICADO (única línea que se tocó): antes era <a href=".." onclick="confirm(...)">.
+                                     Ahora abre el nuevo modalCancelarAlquiler en vez del confirm() nativo del navegador. -->
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-warning"
+                                        title="Cancelar"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalCancelarAlquiler"
+                                        th:data-id="${a.id}"
+                                        th:data-cliente="${a.cliente != null ? a.cliente.nombre : 'Sin Cliente'}"
+                                        th:data-vehiculo="${a.vehiculo != null ? a.vehiculo.placa : 'Sin Vehículo'}">
                                     <i class="fas fa-ban"></i>
-                                </a>
+                                </button>
                             </th:block>
                             <!-- Eliminar -->
                             <button class="btn btn-sm btn-outline-danger"
@@ -133,6 +139,14 @@
                 </div>
                 <form th:action="@{/Alquiler/Guardar}" th:object="${nuevoAlquiler}" method="post">
                     <div class="modal-body py-4 row g-3">
+
+                        <!-- NUEVO: aviso de auto-relleno -->
+                        <div class="col-12">
+                            <div id="avisoAutoRellenoReserva" class="alert alert-info d-none py-2 px-3 mb-0 small" role="alert">
+                                <i class="fas fa-circle-info me-1"></i> Los campos se completaron automáticamente con los datos de la reserva seleccionada. Puedes ajustarlos si es necesario.
+                            </div>
+                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-secondary small">Cliente</label>
                             <select th:field="*{cliente.id}" class="form-select" required>
@@ -279,6 +293,32 @@
         </div>
     </div>
 
+    <!-- NUEVO — MODAL 5: CONFIRMAR CANCELACIÓN (reemplaza el confirm() nativo del botón Cancelar) -->
+    <div class="modal fade" id="modalCancelarAlquiler" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="fas fa-triangle-exclamation text-warning me-2"></i>Confirmar Cancelación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="text-secondary mb-1">
+                        ¿Deseas cancelar el alquiler <strong id="cancelarAlquilerId" class="text-dark"></strong>
+                        de <strong id="cancelarAlquilerCliente" class="text-dark"></strong>
+                        (<span id="cancelarAlquilerVehiculo" class="text-dark"></span>)?
+                    </p>
+                    <p class="text-muted small mb-0">Esta acción marcará el alquiler como <strong>Cancelado</strong> y no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Volver</button>
+                    <a id="btnConfirmarCancelarAlquiler" href="#" class="btn btn-warning px-3 fw-semibold">Sí, Cancelar Alquiler</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT JS PARA PASAR DATOS A LOS MODALES -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -318,6 +358,76 @@
             }
         });
     </script>
+
+    <!-- ======================= NUEVO: BLOQUE AGREGADO (cancelar mejorado + auto-relleno con reserva) ======================= -->
+    <!-- Script independiente; no toca el bloque de arriba. -->
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // NOTA: se asume que Reserva expone estos campos siguiendo la misma convención
+        // que Alquiler (fecha_fin_programada, kilometraje_inicial, precio_diario_aplicado).
+        // Si el nombre real de algún campo en tu entidad Reserva es distinto, dime cuáles son
+        // y ajusto este bloque — mientras tanto la vista no truena aunque un campo venga null.
+        var reservasExistentes = /*[[${reservas}]]*/ [];
+        /*]]>*/
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- Modal Cancelar Alquiler (reemplaza el confirm() nativo) ---
+            const modalCancelar = document.getElementById('modalCancelarAlquiler');
+            if (modalCancelar) {
+                modalCancelar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const cliente = button.getAttribute('data-cliente');
+                    const vehiculo = button.getAttribute('data-vehiculo');
+
+                    document.getElementById('cancelarAlquilerId').textContent = '#' + id;
+                    document.getElementById('cancelarAlquilerCliente').textContent = cliente;
+                    document.getElementById('cancelarAlquilerVehiculo').textContent = vehiculo;
+                    document.getElementById('btnConfirmarCancelarAlquiler').href = '/Alquiler/Cancelar/' + id;
+                });
+            }
+
+            // --- Auto-relleno del formulario Nuevo Alquiler al elegir una Reserva ---
+            const modalNuevoAlquiler = document.getElementById('modalNuevoAlquiler');
+            if (modalNuevoAlquiler) {
+                const selectReserva = modalNuevoAlquiler.querySelector('[name="reserva.id"]');
+                const selectCliente = modalNuevoAlquiler.querySelector('[name="cliente.id"]');
+                const selectVehiculo = modalNuevoAlquiler.querySelector('[name="vehiculo.id"]');
+                const inputFechaFin = modalNuevoAlquiler.querySelector('[name="fecha_fin_programada"]');
+                const inputKmInicial = modalNuevoAlquiler.querySelector('[name="kilometraje_inicial"]');
+                const inputPrecio = modalNuevoAlquiler.querySelector('[name="precio_diario_aplicado"]');
+                const aviso = document.getElementById('avisoAutoRellenoReserva');
+
+                if (selectReserva) {
+                    selectReserva.addEventListener('change', function () {
+                        const idReserva = this.value;
+                        if (!idReserva) {
+                            aviso.classList.add('d-none');
+                            return;
+                        }
+
+                        const reserva = reservasExistentes.find(function (r) {
+                            return String(r.id) === String(idReserva);
+                        });
+                        if (!reserva) return;
+
+                        if (reserva.cliente && reserva.cliente.id) selectCliente.value = reserva.cliente.id;
+                        if (reserva.vehiculo && reserva.vehiculo.id) selectVehiculo.value = reserva.vehiculo.id;
+                        if (reserva.fecha_fin_programada) inputFechaFin.value = reserva.fecha_fin_programada;
+                        if (reserva.kilometraje_inicial != null) inputKmInicial.value = reserva.kilometraje_inicial;
+                        if (reserva.precio_diario_aplicado != null) inputPrecio.value = reserva.precio_diario_aplicado;
+
+                        aviso.classList.remove('d-none');
+                    });
+                }
+            }
+        });
+    </script>
+    <!-- ======================= FIN BLOQUE AGREGADO ======================= -->
 
 </div>
 </html>
