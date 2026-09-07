@@ -206,5 +206,34 @@
         });
     </script>
 
+    <!-- ALERTA DE MENSAJES BACKEND (SweetAlert2) -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            /*<![CDATA[*/
+            const errorDuplicado = /*[[${errorDuplicado}]]*/ null;
+            const exito = /*[[${exito}]]*/ null;
+            /*]]>*/
+
+            if (errorDuplicado) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Nombre Duplicado',
+                    text: errorDuplicado,
+                    confirmButtonColor: '#4f46e5'
+                });
+            }
+
+            if (exito) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Operación Exitosa',
+                    text: exito,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    </script>
+
 </div>
 </html>

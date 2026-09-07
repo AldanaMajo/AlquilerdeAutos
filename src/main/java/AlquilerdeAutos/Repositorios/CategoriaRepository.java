@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
-
-    Optional<Categoria> findByNombre(String nombre);
+    boolean existsByNombreIgnoreCase(String nombre);
+    Optional<Categoria> findByNombreIgnoreCase(String nombre);
 }

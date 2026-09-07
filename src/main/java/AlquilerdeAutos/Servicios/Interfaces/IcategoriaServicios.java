@@ -10,4 +10,5 @@ public interface IcategoriaServicios {
     Categoria guardar(Categoria categoria);
     Categoria actualizar(Integer id, Categoria categoria);
     void eliminar(Integer id);
+    boolean existePorNombre(String nombre);
 }

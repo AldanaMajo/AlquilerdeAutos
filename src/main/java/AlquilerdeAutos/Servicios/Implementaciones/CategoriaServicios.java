@@ -47,4 +47,10 @@ public class CategoriaServicios implements IcategoriaServicios {
         buscarPorId(id);
         categoriaRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existePorNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) return false;
+        return categoriaRepository.existsByNombreIgnoreCase(nombre.trim());
+    }
 }
