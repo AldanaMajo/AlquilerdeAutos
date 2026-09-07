@@ -13,4 +13,5 @@ public interface IvehiculoServicios {
     Vehiculo actualizar(Integer id, Vehiculo vehiculo);
     Vehiculo cambiarEstado(Integer id, Vehiculo.EstadoVehiculo nuevoEstado);
     void eliminar(Integer id);
+    boolean existePorPlaca(String placa);
 }

@@ -10,32 +10,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Adquiler De Autos</title>
+    <title>Alquiler De Autos</title>
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.26.25/sweetalert2.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.26.25/sweetalert2.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 </head>
 
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark1">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="#">Adquiler De Autos</a>
-    <!-- Sidebar Toggle-->
+
+    <a class="navbar-brand d-flex align-items-center justify-content-center py-1 me-0" href="#" style="width: 225px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120" width="185" height="58" class="d-inline-block">
+            <!-- Silueta deportiva de auto -->
+            <path d="M 15 62 C 22 55, 30 52, 42 50 C 65 47, 90 22, 118 16 C 148 10, 180 20, 202 38 C 218 50, 226 56, 225 60"
+                  fill="none"
+                  stroke="#C28E64"
+                  stroke-width="7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
+
+
+            <text x="120" y="86"
+                  fill="#FFFFFF"
+                  font-family="'Arial Black', 'Impact', 'Segoe UI', sans-serif"
+                  font-size="28"
+                  font-weight="900"
+                  letter-spacing="3"
+                  text-anchor="middle">
+                ALQUILER
+            </text>
+
+
+            <text x="120" y="112"
+                  fill="#FFFFFF"
+                  font-family="'Arial Black', 'Impact', 'Segoe UI', sans-serif"
+                  font-size="23"
+                  font-weight="900"
+                  letter-spacing="4.5"
+                  text-anchor="middle">
+                DE AUTOS
+            </text>
+        </svg>
+    </a>
+
+
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 
-    <!-- AQUÍ SE REEMPLAZA EL NAVBAR CON SPRING SECURITY -->
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user fa-fw"></i>
-                <span sec:authentication="name">Usuario</span>
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle fa-lg"></i>
+                <span sec:authentication="name">usuario@email.com</span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
                 <li>
-                    <span class="dropdown-item-text text-muted small">
-                        Rol: <strong sec:authentication="principal.authorities">ROL</strong>
-                    </span>
+                    <div class="dropdown-item-text">
+                        <div class="text-muted small">Conectado como:</div>
+                        <strong sec:authentication="name">usuario@email.com</strong>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown-item-text text-muted small pt-0">
+                        Rol: <span class="badge bg-secondary" sec:authentication="principal.authorities">ROL</span>
+                    </div>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
@@ -55,56 +93,63 @@
         <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
+
+                    <div class="sb-sidenav-menu-heading">Principal</div>
                     <a class="nav-link" th:href="@{/Home/index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Deashboard
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                        Dashboard
                     </a>
-                    <a class="nav-link" th:href="@{/Cliente/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Clientes
-                    </a>
-                    <a class="nav-link" th:href="@{/Vehiculo/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Vehiculos
-                    </a>
-                    <a class="nav-link" th:href="@{/Marca/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Marcas
-                    </a>
-                    <a class="nav-link" th:href="@{/Pago/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Pagos
-                    </a>
+
+                    <div class="sb-sidenav-menu-heading">Operaciones</div>
                     <a class="nav-link" th:href="@{/Alquiler/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Alquiler
-                    </a>
-                    <a class="nav-link" th:href="@{/Comprobante/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Comprobantes
+                        <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
+                        Alquileres
                     </a>
                     <a class="nav-link" th:href="@{/Reserva/Index}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
                         Reservas
                     </a>
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                        Configuracion
+                    <a class="nav-link" th:href="@{/Cliente/Index}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        Clientes
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading">Flota</div>
+                    <a class="nav-link" th:href="@{/Vehiculo/Index}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-car"></i></div>
+                        Vehículos
+                    </a>
+                    <a class="nav-link" th:href="@{/Marca/Index}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
+                        Marcas
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading">Finanzas</div>
+                    <a class="nav-link" th:href="@{/Pago/Index}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-credit-card"></i></div>
+                        Pagos
+                    </a>
+                    <a class="nav-link" th:href="@{/Comprobante/Index}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                        Comprobantes
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading">Sistema</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseConfiguracion" aria-expanded="false" aria-controls="collapseConfiguracion">
+                        <div class="sb-nav-link-icon"><i class="fas fa-cog"></i></div>
+                        Configuración
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
-                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                            <a class="nav-link" th:href="@{/Rol/Index}">Roles</a>
-                            <a class="nav-link" th:href="@{/Categoria/Index}">Categorias de Vehiculos</a>
+                    <div class="collapse" id="collapseConfiguracion" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" th:href="@{/Usuario/Index}">Usuarios</a>
-                            <a class="nav-link" th:href="@{/Categoria/Index}">Categorias de Licencia</a>
+                            <a class="nav-link" th:href="@{/Rol/Index}">Roles</a>
+                            <a class="nav-link" th:href="@{/Categoria/Index}">Cat. de Vehículos</a>
+                            <a class="nav-link" th:href="@{/CategoriaLicencia/Index}">Tipos de Licencia</a>
                         </nav>
                     </div>
+
                 </div>
-            </div>
-            <div class="sb-sidenav-footer">
-                <div class="small">Logged in as:</div>
-                <span sec:authentication="name">Usuario</span>
             </div>
         </nav>
     </div>
@@ -112,14 +157,14 @@
         <main>
             <div class="container-fluid px-4">
                 <div layout:fragment="content">
-                    <p>Changine contents.</p>
+                    <p>Changing contents.</p>
                 </div>
             </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Adquiler de Autos 2026</div>
+                    <div class="text-muted">Copyright &copy; Alquiler de Autos 2026</div>
                     <div>
                         <a href="#">Privacy Policy</a>
                         &middot;
@@ -130,9 +175,7 @@
         </footer>
     </div>
 </div>
-<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<!-- SB Admin Scripts -->
 <script th:src="@{/js/scripts.js}"></script>
 </body>
 </html>

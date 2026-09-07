@@ -1,0 +1,227 @@
+/* --- CONFIGURACIÓN GENERAL --- */
+body {
+    background-color: #020612;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1rem;
+    margin: 0;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 1050px;
+    background: #040C23; /* Color azul personalizado */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- SECCIÓN IZQUIERDA (HERO IMAGE) --- */
+.hero-section {
+    background: linear-gradient(180deg, rgba(4, 12, 35, 0.3) 0%, rgba(4, 12, 35, 0.9) 100%),
+    url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+    position: relative;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 520px;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.hero-content h1 {
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.hero-content h1 span {
+    color: #c4a482;
+    display: block;
+}
+
+.hero-content p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+    max-width: 280px;
+}
+
+.security-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.security-badge i {
+    font-size: 1.2rem;
+    color: #c4a482;
+}
+
+/* --- SECCIÓN DERECHA (FORMULARIO) --- */
+.form-section {
+    background-color: #040C23; /* Color azul personalizado */
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.form-title {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.form-subtitle {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+}
+
+.custom-label {
+    color: #cbd5e1;
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+/* Campos de entrada */
+.input-box {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+
+.input-box i.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.input-box i.toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.custom-input {
+    background-color: #020716;
+    border: 1px solid #111c38;
+    color: #f8fafc;
+    padding: 0.65rem 0.75rem 0.65rem 2.5rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+    background-color: #020716;
+    border-color: #c4a482;
+    color: #ffffff;
+    box-shadow: none;
+    outline: none;
+}
+
+.custom-input::placeholder {
+    color: #475569;
+}
+
+/* Opciones y Checkbox */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-check-input {
+    background-color: #020716;
+    border-color: #111c38;
+}
+
+.form-check-input:checked {
+    background-color: #c4a482;
+    border-color: #c4a482;
+}
+
+.form-check-label {
+    color: #94a3b8;
+}
+
+.forgot-link {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-link:hover {
+    color: #c4a482;
+}
+
+/* Botón principal */
+.btn-submit {
+    background-color: #c4a482;
+    color: #040C23;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 6px;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.btn-submit:hover {
+    background-color: #b39371;
+    color: #040C23;
+}
+
+.copyright {
+    color: #475569;
+    font-size: 0.75rem;
+    margin-top: 2rem;
+}
+
+/* Alertas de Thymeleaf */
+.alert-custom-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.alert-custom-logout {
+    background-color: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}

@@ -49,11 +49,24 @@ public class VehiculoWebController {
 
     @PostMapping("/Editar")
     public String editar(@ModelAttribute Vehiculo vehiculo) {
-        if (vehiculo.getPrecio_por_dia() == null && vehiculo.getCategoria() != null && vehiculo.getCategoria().getId() != null) {
+        // 1. Obtener la categoría completa de la BD para tener la tarifa base
+        if (vehiculo.getCategoria() != null && vehiculo.getCategoria().getId() != null) {
             Categoria cat = categoriaService.buscarPorId(vehiculo.getCategoria().getId());
-            vehiculo.setPrecio_por_dia(cat.getTarifa_base_diaria());
+            vehiculo.setCategoria(cat);
+
+            if (vehiculo.getPrecio_por_dia() == null) {
+                vehiculo.setPrecio_por_dia(cat.getTarifa_base_diaria());
+            }
         }
+
+        // 2. Obtener la marca completa de la BD
+        if (vehiculo.getMarca() != null && vehiculo.getMarca().getId() != null) {
+            vehiculo.setMarca(marcaService.buscarPorId(vehiculo.getMarca().getId()));
+        }
+
+        // 3. Guardar la actualización
         vehiculoService.actualizar(vehiculo.getId(), vehiculo);
+
         return "redirect:/Vehiculo/Index";
     }
 

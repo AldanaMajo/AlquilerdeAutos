@@ -109,9 +109,22 @@
                 </div>
                 <form th:action="@{/Marca/Guardar}" th:object="${nuevaMarca}" method="post">
                     <div class="modal-body py-4">
+                        <!-- ALERTA DE ERROR SI ESTÁ DUPLICADO -->
+                        <div th:if="${errorDuplicadoAgregar}" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            <span th:text="${errorDuplicadoAgregar}">La marca ya existe.</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
                         <div class="mb-3">
                             <label for="nombreNuevo" class="form-label fw-semibold text-secondary small">Nombre de la Marca</label>
-                            <input type="text" id="nombreNuevo" th:field="*{nombre}" class="form-control" placeholder="Ej: Toyota, Nissan..." required>
+                            <input type="text"
+                                   id="nombreNuevo"
+                                   th:field="*{nombre}"
+                                   class="form-control"
+                                   th:classappend="${errorDuplicadoAgregar} ? 'is-invalid' : ''"
+                                   placeholder="Ej: Toyota, Nissan..."
+                                   required>
                         </div>
                     </div>
                     <div class="modal-footer border-top-0 pt-0">
@@ -133,10 +146,23 @@
                 </div>
                 <form th:action="@{/Marca/Editar}" method="post">
                     <div class="modal-body py-4">
-                        <input type="hidden" id="editarId" name="id">
+                        <!-- ALERTA DE ERROR SI ESTÁ DUPLICADO AL EDITAR -->
+                        <div th:if="${errorDuplicadoEditar}" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            <span th:text="${errorDuplicadoEditar}">Ya existe otra marca con este nombre.</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <input type="hidden" id="editarId" name="id" th:value="${marcaEditarId}">
                         <div class="mb-3">
                             <label for="editarNombre" class="form-label fw-semibold text-secondary small">Nombre de la Marca</label>
-                            <input type="text" id="editarNombre" name="nombre" class="form-control" required>
+                            <input type="text"
+                                   id="editarNombre"
+                                   name="nombre"
+                                   th:value="${marcaEditarNombre}"
+                                   class="form-control"
+                                   th:classappend="${errorDuplicadoEditar} ? 'is-invalid' : ''"
+                                   required>
                         </div>
                     </div>
                     <div class="modal-footer border-top-0 pt-0">
@@ -167,19 +193,21 @@
         </div>
     </div>
 
-    <!-- SCRIPT PARA CARGAR DATOS EN LOS MODALES -->
-    <script>
+    <!-- SCRIPT PARA CARGAR DATOS Y REABRIR MODALES EN CASO DE ERROR -->
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
             // Modal Editar
             const modalEditar = document.getElementById('modalEditarMarca');
             if (modalEditar) {
                 modalEditar.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const nombre = button.getAttribute('data-nombre');
+                    if (button) {
+                        const id = button.getAttribute('data-id');
+                        const nombre = button.getAttribute('data-nombre');
 
-                    document.getElementById('editarId').value = id;
-                    document.getElementById('editarNombre').value = nombre;
+                        document.getElementById('editarId').value = id;
+                        document.getElementById('editarNombre').value = nombre;
+                    }
                 });
             }
 
@@ -188,13 +216,32 @@
             if (modalEliminar) {
                 modalEliminar.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const nombre = button.getAttribute('data-nombre');
+                    if (button) {
+                        const id = button.getAttribute('data-id');
+                        const nombre = button.getAttribute('data-nombre');
 
-                    document.getElementById('eliminarNombre').textContent = nombre;
-                    document.getElementById('btnConfirmarEliminar').href = '/Marca/Eliminar/' + id;
+                        document.getElementById('eliminarNombre').textContent = nombre;
+                        document.getElementById('btnConfirmarEliminar').href = '/Marca/Eliminar/' + id;
+                    }
                 });
             }
+
+            // Reabrir Modal de Agregar si la marca ingresada está duplicada
+            /*[# th:if="${errorDuplicadoAgregar != null}"]*/
+            var modalAgregarElement = document.getElementById('modalNuevaMarca');
+            if (modalAgregarElement) {
+                var modalAgregar = new bootstrap.Modal(modalAgregarElement);
+                modalAgregar.show();
+            }
+            /*[/]*/
+
+            // Reabrir Modal de Editar si la marca ingresada está duplicada
+            /*[# th:if="${errorDuplicadoEditar != null}"]*/
+            if (modalEditar) {
+                var bsModalEditar = new bootstrap.Modal(modalEditar);
+                bsModalEditar.show();
+            }
+            /*[/]*/
         });
     </script>
 

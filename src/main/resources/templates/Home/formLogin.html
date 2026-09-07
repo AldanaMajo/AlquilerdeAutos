@@ -3,80 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Alquiler de Autos</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Comercial de Autos - Iniciar Sesión</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-card {
-            width: 100%;
-            max-width: 400px;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
-        }
-        .btn-primary-custom {
-            background-color: #4f46e5;
-            border: none;
-        }
-        .btn-primary-custom:hover {
-            background-color: #4338ca;
-        }
-    </style>
+    <link rel="stylesheet" href="Login.css" th:href="@{/css/Login.css}">
 </head>
 <body>
 
-<div class="login-card">
-    <div class="text-center mb-4">
-        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-2"
-             style="width: 60px; height: 60px; background-color: #eef2ff; color: #4f46e5;">
-            <i class="fas fa-car-side fa-2x"></i>
-        </div>
-        <h4 class="fw-bold text-dark">Alquiler de Autos</h4>
-        <p class="text-muted small">Panel de Administración</p>
-    </div>
+<div class="login-wrapper">
+    <div class="row g-0">
 
-    <!-- Alerta de error si falla el inicio de sesión -->
-    <div th:if="${param.error}" class="alert alert-danger py-2 fs-6" role="alert">
-        <i class="fas fa-exclamation-circle me-1"></i> Usuario o contraseña incorrectos.
-    </div>
+        <div class="col-lg-6 hero-section">
+            <div class="brand-logo">
+                <i class="fas fa-car-alt text-white"></i>
+                <span>Alquiler de Autos</span>
+            </div>
 
-    <!-- Alerta de cierre de sesión exitoso -->
-    <div th:if="${param.logout}" class="alert alert-info py-2 fs-6" role="alert">
-        <i class="fas fa-info-circle me-1"></i> Has cerrado sesión correctamente.
-    </div>
+            <div class="hero-content">
+                <h1>Bienvenido<br><span>de nuevo</span></h1>
+                <p>Inicia sesión para continuar gestionando tu negocio.</p>
+            </div>
 
-    <form th:action="@{/login}" method="post">
-        <div class="mb-3">
-            <label for="username" class="form-label fw-semibold text-secondary small">Correo Electrónico</label>
-            <div class="input-group">
-                <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-muted"></i></span>
-                <input type="email" id="username" name="username" class="form-control bg-light border-start-0" placeholder="admin@correo.com" required autofocus>
+            <div class="security-badge">
+
             </div>
         </div>
 
-        <div class="mb-4">
-            <label for="password" class="form-label fw-semibold text-secondary small">Contraseña</label>
-            <div class="input-group">
-                <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-muted"></i></span>
-                <input type="password" id="password" name="password" class="form-control bg-light border-start-0" placeholder="••••••••" required>
+        <div class="col-lg-6 form-section">
+            <div>
+                <h2 class="form-title">Iniciar Sesión</h2>
+                <p class="form-subtitle">Ingresa tus credenciales para acceder</p>
+
+                <!-- Alertas de Thymeleaf -->
+                <div th:if="${param.error}" class="alert alert-custom-error py-2 px-3 mb-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-1"></i> Usuario o contraseña incorrectos.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-custom-logout py-2 px-3 mb-3" role="alert">
+                    <i class="fas fa-info-circle me-1"></i> Has cerrado sesión correctamente.
+                </div>
+
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="custom-label">Usuario</label>
+                        <div class="input-box">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="username" name="username" class="custom-input" placeholder="Ingresa tu usuario" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="custom-label">Contraseña</label>
+                        <div class="input-box">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" name="password" class="custom-input" placeholder="Ingresa tu contraseña" required>
+                            <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember-me">
+                            <label class="form-check-label" for="remember">Recordarme</label>
+                        </div>
+                        <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-submit">Iniciar Sesión</button>
+                </form>
+            </div>
+
+            <div class="copyright text-center text-lg-start">
+                © 2026 <strong>Alquiler de Autos</strong>. Todos los derechos reservados.
             </div>
         </div>
-
-        <button type="submit" class="btn btn-primary-custom text-white w-100 py-2 fw-semibold rounded-3">
-            Ingresar al Sistema
-        </button>
-    </form>
+    </div>
 </div>
 
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const icon = document.querySelector('.toggle-password');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

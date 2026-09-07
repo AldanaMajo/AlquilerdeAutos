@@ -85,6 +85,16 @@
   box-sizing: border-box;
 }
 
+/* Ocultar barra en Chrome, Safari y Opera */
+#layoutSidenav_nav .sb-sidenav-menu::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ocultar barra en Firefox e IE/Edge */
+#layoutSidenav_nav .sb-sidenav-menu {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 @media (prefers-reduced-motion: no-preference) {
   :root {
     scroll-behavior: smooth;

@@ -10,4 +10,5 @@ public interface ImarcaServicios {
     Marca guardar(Marca marca);
     Marca actualizar(Integer id, Marca marca);
     void eliminar(Integer id);
+    boolean existePorNombre(String nombre);
 }

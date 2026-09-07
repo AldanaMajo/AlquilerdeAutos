@@ -11,8 +11,13 @@ import java.util.List;
 @Service
 public class VehiculoServicios implements IvehiculoServicios {
 
+
     private final VehiculoRepository vehiculoRepository;
 
+    @Override
+    public boolean existePorPlaca(String placa) {
+        return vehiculoRepository.existsByPlaca(placa);
+    }
     @Autowired
     public VehiculoServicios(VehiculoRepository vehiculoRepository) {
         this.vehiculoRepository = vehiculoRepository;
@@ -48,13 +53,25 @@ public class VehiculoServicios implements IvehiculoServicios {
     @Override
     public Vehiculo actualizar(Integer id, Vehiculo vehiculo) {
         Vehiculo existente = buscarPorId(id);
+
         existente.setPlaca(vehiculo.getPlaca());
         existente.setModelo(vehiculo.getModelo());
         existente.setAnio(vehiculo.getAnio());
         existente.setColor(vehiculo.getColor());
-        existente.setPrecio_por_dia(vehiculo.getPrecio_por_dia());
-        existente.setMarca(vehiculo.getMarca());
-        existente.setCategoria(vehiculo.getCategoria());
+        existente.setEstado(vehiculo.getEstado()); // <-- IMPORTANTE: Asignar estado
+
+        if (vehiculo.getPrecio_por_dia() != null) {
+            existente.setPrecio_por_dia(vehiculo.getPrecio_por_dia());
+        }
+
+        if (vehiculo.getMarca() != null && vehiculo.getMarca().getId() != null) {
+            existente.setMarca(vehiculo.getMarca());
+        }
+
+        if (vehiculo.getCategoria() != null && vehiculo.getCategoria().getId() != null) {
+            existente.setCategoria(vehiculo.getCategoria());
+        }
+
         return vehiculoRepository.save(existente);
     }
 

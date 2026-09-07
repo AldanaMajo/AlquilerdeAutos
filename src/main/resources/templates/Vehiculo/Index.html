@@ -174,6 +174,27 @@
 
     </div>
 
+    <!-- DATALISTS COMPARTIDOS PARA AÑO Y COLOR -->
+    <datalist id="listaAnios">
+        <option th:each="year : ${#numbers.sequence(2010, 2026)}" th:value="${year}"></option>
+    </datalist>
+
+    <datalist id="listaColores">
+        <option value="Blanco">
+        <option value="Negro">
+        <option value="Gris">
+        <option value="Plata">
+        <option value="Rojo">
+        <option value="Azul">
+        <option value="Verde">
+        <option value="Amarillo">
+        <option value="Naranja">
+        <option value="Café">
+        <option value="Beige">
+        <option value="Dorado">
+        <option value="Vino">
+    </datalist>
+
 
     <!-- MODAL 1: NUEVO VEHÍCULO -->
 
@@ -260,10 +281,14 @@
                                 </label>
 
                                 <input type="text"
+                                       id="nuevoPlaca"
                                        th:field="*{placa}"
                                        class="form-control"
                                        placeholder="Ej: P123456"
                                        required>
+                                <div id="alertaPlacaNuevo" class="invalid-feedback">
+                                    La placa ingresada ya se encuentra registrada.
+                                </div>
 
                             </div>
 
@@ -289,20 +314,12 @@
                                     Año
                                 </label>
 
-                                <select th:field="*{anio}"
-                                        class="form-select"
-                                        required>
-
-                                    <option value="" selected disabled>
-                                        Seleccione año...
-                                    </option>
-
-                                    <option th:each="year : ${#numbers.sequence(2010, 2026)}"
-                                            th:value="${year}"
-                                            th:text="${year}">
-                                    </option>
-
-                                </select>
+                                <input type="number"
+                                       th:field="*{anio}"
+                                       class="form-control"
+                                       list="listaAnios"
+                                       placeholder="Escriba o seleccione el año..."
+                                       required>
 
                             </div>
 
@@ -313,29 +330,12 @@
                                     Color
                                 </label>
 
-                                <select th:field="*{color}"
-                                        class="form-select"
-                                        required>
-
-                                    <option value="" selected disabled>
-                                        Seleccione color...
-                                    </option>
-
-                                    <option value="Blanco">Blanco</option>
-                                    <option value="Negro">Negro</option>
-                                    <option value="Gris">Gris</option>
-                                    <option value="Plata">Plata</option>
-                                    <option value="Rojo">Rojo</option>
-                                    <option value="Azul">Azul</option>
-                                    <option value="Verde">Verde</option>
-                                    <option value="Amarillo">Amarillo</option>
-                                    <option value="Naranja">Naranja</option>
-                                    <option value="Café">Café</option>
-                                    <option value="Beige">Beige</option>
-                                    <option value="Dorado">Dorado</option>
-                                    <option value="Vino">Vino</option>
-
-                                </select>
+                                <input type="text"
+                                       th:field="*{color}"
+                                       class="form-control"
+                                       list="listaColores"
+                                       placeholder="Escriba o seleccione el color..."
+                                       required>
 
                             </div>
 
@@ -373,6 +373,7 @@
                         </button>
 
                         <button type="submit"
+                                id="btnGuardarNuevo"
                                 class="btn btn-primary px-3 fw-semibold"
                                 style="background-color: #4f46e5; border: none;">
                             Guardar
@@ -487,6 +488,9 @@
                                        name="placa"
                                        class="form-control"
                                        required>
+                                <div id="alertaPlacaEditar" class="invalid-feedback">
+                                    La placa ingresada ya pertenece a otro vehículo.
+                                </div>
 
                             </div>
 
@@ -512,21 +516,13 @@
                                     Año
                                 </label>
 
-                                <select id="editarAnio"
-                                        name="anio"
-                                        class="form-select"
-                                        required>
-
-                                    <option value="" disabled>
-                                        Seleccione año...
-                                    </option>
-
-                                    <option th:each="year : ${#numbers.sequence(2010, 2026)}"
-                                            th:value="${year}"
-                                            th:text="${year}">
-                                    </option>
-
-                                </select>
+                                <input type="number"
+                                       id="editarAnio"
+                                       name="anio"
+                                       class="form-control"
+                                       list="listaAnios"
+                                       placeholder="Escriba o seleccione el año..."
+                                       required>
 
                             </div>
 
@@ -537,30 +533,13 @@
                                     Color
                                 </label>
 
-                                <select id="editarColor"
-                                        name="color"
-                                        class="form-select"
-                                        required>
-
-                                    <option value="" disabled>
-                                        Seleccione color...
-                                    </option>
-
-                                    <option value="Blanco">Blanco</option>
-                                    <option value="Negro">Negro</option>
-                                    <option value="Gris">Gris</option>
-                                    <option value="Plata">Plata</option>
-                                    <option value="Rojo">Rojo</option>
-                                    <option value="Azul">Azul</option>
-                                    <option value="Verde">Verde</option>
-                                    <option value="Amarillo">Amarillo</option>
-                                    <option value="Naranja">Naranja</option>
-                                    <option value="Café">Café</option>
-                                    <option value="Beige">Beige</option>
-                                    <option value="Dorado">Dorado</option>
-                                    <option value="Vino">Vino</option>
-
-                                </select>
+                                <input type="text"
+                                       id="editarColor"
+                                       name="color"
+                                       class="form-control"
+                                       list="listaColores"
+                                       placeholder="Escriba o seleccione el color..."
+                                       required>
 
                             </div>
 
@@ -599,6 +578,7 @@
                         </button>
 
                         <button type="submit"
+                                id="btnGuardarEditar"
                                 class="btn btn-primary px-3 fw-semibold"
                                 style="background-color: #4f46e5; border: none;">
                             Actualizar
@@ -678,6 +658,8 @@
 
         document.addEventListener('DOMContentLoaded', function () {
 
+            let placaOriginalEditar = '';
+
             const modalEditar = document.getElementById('modalEditarVehiculo');
 
             modalEditar.addEventListener('show.bs.modal', function (event) {
@@ -697,8 +679,10 @@
                 const marca = button.getAttribute('data-marca');
                 const categoria = button.getAttribute('data-categoria');
 
+                placaOriginalEditar = (placa || '').trim();
+
                 document.getElementById('editarId').value = id || '';
-                document.getElementById('editarPlaca').value = placa || '';
+                document.getElementById('editarPlaca').value = placaOriginalEditar;
                 document.getElementById('editarModelo').value = modelo || '';
 
                 document.getElementById('editarAnio').value = anio || '';
@@ -706,6 +690,11 @@
 
                 document.getElementById('editarMarca').value = marca || '';
                 document.getElementById('editarCategoria').value = categoria || '';
+
+                // Resetear estado de validación al abrir modal
+                const inputEditarPlaca = document.getElementById('editarPlaca');
+                inputEditarPlaca.classList.remove('is-invalid');
+                document.getElementById('btnGuardarEditar').disabled = false;
 
                 const selectEstado = document.getElementById('editarEstado');
 
@@ -797,6 +786,62 @@
                     cambiarColorEstado(this);
                 });
 
+            }
+
+            // --- VALIDACIÓN DE PLACAS DUPLICADAS CORREGIDA --- //
+
+            function validarPlacaDuplicada(inputElement, idBtnSubmit, esEditar = false) {
+                const placa = inputElement.value.trim();
+                const btnSubmit = document.getElementById(idBtnSubmit);
+
+                // Si no hay texto o en edición la placa es idéntica a la original, ignorar validación
+                if (!placa || (esEditar && placa.toUpperCase() === placaOriginalEditar.toUpperCase())) {
+                    inputElement.classList.remove('is-invalid');
+                    btnSubmit.disabled = false;
+                    return;
+                }
+
+                // Apunta al endpoint correcto en VehiculoController (/api/vehiculos/Vehiculo/ExistePlaca)
+                fetch(`/api/vehiculos/Vehiculo/ExistePlaca?placa=${encodeURIComponent(placa)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Error en respuesta HTTP");
+                        return response.json();
+                    })
+                    .then(existe => {
+                        if (existe) {
+                            inputElement.classList.add('is-invalid');
+                            btnSubmit.disabled = true;
+                        } else {
+                            inputElement.classList.remove('is-invalid');
+                            btnSubmit.disabled = false;
+                        }
+                    })
+                    .catch(err => console.error("Error al validar la placa:", err));
+            }
+
+            // Listener en Modal Nuevo
+            const inputNuevoPlaca = document.getElementById('nuevoPlaca');
+            if (inputNuevoPlaca) {
+                inputNuevoPlaca.addEventListener('input', function () {
+                    validarPlacaDuplicada(this, 'btnGuardarNuevo', false);
+                });
+            }
+
+            // Listener en Modal Editar
+            const inputEditarPlaca = document.getElementById('editarPlaca');
+            if (inputEditarPlaca) {
+                inputEditarPlaca.addEventListener('input', function () {
+                    validarPlacaDuplicada(this, 'btnGuardarEditar', true);
+                });
+            }
+
+            // Resetear validación en modal nuevo al cerrar
+            const modalNuevo = document.getElementById('modalNuevoVehiculo');
+            if (modalNuevo) {
+                modalNuevo.addEventListener('hidden.bs.modal', function () {
+                    if (inputNuevoPlaca) inputNuevoPlaca.classList.remove('is-invalid');
+                    document.getElementById('btnGuardarNuevo').disabled = false;
+                });
             }
 
         });

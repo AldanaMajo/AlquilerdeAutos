@@ -30,6 +30,11 @@ public class VehiculoController {
     public ResponseEntity<List<Vehiculo>> listarDisponibles() {
         return ResponseEntity.ok(vehiculoService.listarDisponibles());
     }
+    @GetMapping("/Vehiculo/ExistePlaca")
+    @ResponseBody
+    public boolean existePlaca(@RequestParam String placa) {
+        return vehiculoService.existePorPlaca(placa);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {

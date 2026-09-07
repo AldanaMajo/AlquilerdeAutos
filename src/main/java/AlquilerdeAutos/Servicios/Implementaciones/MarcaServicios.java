@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class MarcaServicios implements ImarcaServicios {
 
+
     private final MarcaRepository marcaRepository;
 
     @Autowired
@@ -45,5 +46,9 @@ public class MarcaServicios implements ImarcaServicios {
     public void eliminar(Integer id) {
         buscarPorId(id);
         marcaRepository.deleteById(id);
+    }
+    @Override
+    public boolean existePorNombre(String nombre) {
+        return marcaRepository.existsByNombreIgnoreCase(nombre);
     }
 }
