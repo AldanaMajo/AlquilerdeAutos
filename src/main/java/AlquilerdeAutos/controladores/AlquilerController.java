@@ -43,11 +43,14 @@ public class AlquilerController {
         // BUSCADOR
         if (buscar != null && !buscar.trim().isEmpty()) {
             String texto = buscar.trim().toLowerCase();
+
             alquileres = alquileres.stream()
                     .filter(alquiler ->
                             String.valueOf(alquiler.getId()).contains(texto) ||
-                                    (alquiler.getCliente() != null && alquiler.getCliente().getNombre().toLowerCase().contains(texto)) ||
-                                    (alquiler.getVehiculo() != null && alquiler.getVehiculo().getPlaca().toLowerCase().contains(texto))
+                                    (alquiler.getCliente() != null &&
+                                            alquiler.getCliente().getNombre().toLowerCase().contains(texto)) ||
+                                    (alquiler.getVehiculo() != null &&
+                                            alquiler.getVehiculo().getPlaca().toLowerCase().contains(texto))
                     )
                     .toList();
         }
@@ -76,6 +79,7 @@ public class AlquilerController {
     public String editar(
             @RequestParam Integer id,
             @ModelAttribute Alquiler alquiler) {
+
         alquilerService.actualizar(id, alquiler);
         return "redirect:/Alquiler/Index";
     }
@@ -85,6 +89,7 @@ public class AlquilerController {
     public String finalizar(
             @RequestParam Integer id,
             @RequestParam Integer kilometrajeFinal) {
+
         alquilerService.finalizar(id, kilometrajeFinal);
         return "redirect:/Alquiler/Index";
     }

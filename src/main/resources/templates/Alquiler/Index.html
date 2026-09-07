@@ -9,8 +9,11 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center my-4 gap-3">
         <div>
             <h2 class="fw-bold text-dark mb-1">Gestión de Alquileres</h2>
-            <p class="text-muted small mb-0">Administra las rentas de vehículos activas, finalizadas y canceladas.</p>
+            <p class="text-muted small mb-0">
+                Administra las rentas de vehículos activas, finalizadas y canceladas.
+            </p>
         </div>
+
         <button type="button"
                 class="btn btn-primary px-3 py-2 rounded-3 fw-semibold shadow-sm"
                 style="background-color: #4f46e5; border: none;"
@@ -22,23 +25,52 @@
 
     <!-- Buscador y Tabla -->
     <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
+
         <div class="p-3 bg-white border-bottom">
-            <form th:action="@{/Alquiler/Index}" method="get" class="row g-2 align-items-center">
+
+            <form th:action="@{/Alquiler/Index}"
+                  method="get"
+                  class="row g-2 align-items-center">
+
                 <div class="col-md-4">
+
                     <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" name="buscar" th:value="${buscar}" class="form-control bg-light border-start-0" placeholder="Buscar por ID, Cliente o Placa...">
+
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+
+                        <input type="text"
+                               name="buscar"
+                               th:value="${buscar}"
+                               class="form-control bg-light border-start-0"
+                               placeholder="Buscar por ID, Cliente o Placa...">
+
                     </div>
+
                 </div>
+
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-light fw-semibold w-100 border">Buscar</button>
+
+                    <button type="submit"
+                            class="btn btn-light fw-semibold w-100 border">
+                        Buscar
+                    </button>
+
                 </div>
+
             </form>
+
         </div>
 
         <div class="table-responsive">
-            <table class="table align-middle mb-0 text-secondary" style="font-size: 0.875rem;">
-                <thead class="bg-light text-uppercase fw-bold text-muted border-bottom" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+
+            <table class="table align-middle mb-0 text-secondary"
+                   style="font-size: 0.875rem;">
+
+                <thead class="bg-light text-uppercase fw-bold text-muted border-bottom"
+                       style="font-size: 0.75rem; letter-spacing: 0.5px;">
+
                 <tr>
                     <th class="py-3 px-3">ID</th>
                     <th class="py-3 px-3">Cliente</th>
@@ -50,33 +82,97 @@
                     <th class="py-3 px-3">Estado</th>
                     <th class="py-3 px-3 text-center">Acciones</th>
                 </tr>
+
                 </thead>
+
                 <tbody class="bg-white">
-                <tr class="border-bottom" th:each="a : ${alquileres}">
-                    <td class="py-3 px-3 fw-bold text-dark" th:text="${a.id}">1</td>
-                    <td class="py-3 px-3" th:text="${a.cliente != null ? a.cliente.nombre : 'Sin Cliente'}">Juan Pérez</td>
-                    <td class="py-3 px-3">
-                        <span class="fw-semibold text-dark" th:text="${a.vehiculo != null ? a.vehiculo.placa : 'Sin Vehículo'}">ABC-123</span>
+
+                <tr class="border-bottom"
+                    th:each="a : ${alquileres}">
+
+                    <td class="py-3 px-3 fw-bold text-dark"
+                        th:text="${a.id}">
+                        1
                     </td>
-                    <td class="py-3 px-3">
-                        <small class="d-block text-dark fw-semibold" th:text="${#temporals.format(a.fecha_inicio, 'dd/MM/yyyy HH:mm')}">01/01/2026</small>
-                        <small class="text-muted" th:text="${#temporals.format(a.fecha_fin_programada, 'dd/MM/yyyy HH:mm')}">05/01/2026</small>
+
+                    <td class="py-3 px-3"
+                        th:text="${a.cliente != null ? a.cliente.nombre : 'Sin Cliente'}">
+                        Juan Pérez
                     </td>
+
                     <td class="py-3 px-3">
-                        <span th:text="${a.kilometraje_inicial + ' km'}">0 km</span> /
-                        <span th:text="${a.kilometraje_final != null ? a.kilometraje_final + ' km' : '-'}">-</span>
+
+                        <span class="fw-semibold text-dark"
+                              th:text="${a.vehiculo != null ? a.vehiculo.placa : 'Sin Vehículo'}">
+                            ABC-123
+                        </span>
+
                     </td>
-                    <td class="py-3 px-3" th:text="${'$' + a.precio_diario_aplicado}">$0.00</td>
-                    <td class="py-3 px-3 fw-bold text-dark" th:text="${a.monto_total != null ? '$' + a.monto_total : '-'}">$0.00</td>
+
                     <td class="py-3 px-3">
-                        <span th:if="${a.estado.name() == 'EN_PROCESO'}" class="badge bg-warning text-dark px-2 py-1">En Proceso</span>
-                        <span th:if="${a.estado.name() == 'FINALIZADO'}" class="badge bg-success px-2 py-1">Finalizado</span>
-                        <span th:if="${a.estado.name() == 'CANCELADO'}" class="badge bg-danger px-2 py-1">Cancelado</span>
+
+                        <small class="d-block text-dark fw-semibold"
+                               th:text="${#temporals.format(a.fecha_inicio, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2026
+                        </small>
+
+                        <small class="text-muted"
+                               th:text="${#temporals.format(a.fecha_fin_programada, 'dd/MM/yyyy HH:mm')}">
+                            05/01/2026
+                        </small>
+
                     </td>
+
+                    <td class="py-3 px-3">
+
+                        <span th:text="${a.kilometraje_inicial + ' km'}">
+                            0 km
+                        </span>
+                        /
+
+                        <span th:text="${a.kilometraje_final != null ? a.kilometraje_final + ' km' : '-'}">
+                            -
+                        </span>
+
+                    </td>
+
+                    <td class="py-3 px-3"
+                        th:text="${'$' + a.precio_diario_aplicado}">
+                        $0.00
+                    </td>
+
+                    <td class="py-3 px-3 fw-bold text-dark"
+                        th:text="${a.monto_total != null ? '$' + a.monto_total : '-'}">
+                        $0.00
+                    </td>
+
+                    <td class="py-3 px-3">
+
+                        <span th:if="${a.estado.name() == 'EN_PROCESO'}"
+                              class="badge bg-warning text-dark px-2 py-1">
+                            En Proceso
+                        </span>
+
+                        <span th:if="${a.estado.name() == 'FINALIZADO'}"
+                              class="badge bg-success px-2 py-1">
+                            Finalizado
+                        </span>
+
+                        <span th:if="${a.estado.name() == 'CANCELADO'}"
+                              class="badge bg-danger px-2 py-1">
+                            Cancelado
+                        </span>
+
+                    </td>
+
                     <td class="py-3 px-3 text-center">
+
                         <div class="d-flex justify-content-center gap-1">
-                            <!-- Acciones solo para alquileres EN_PROCESO -->
+
+                            <!-- FINALIZAR / EDITAR / CANCELAR -->
+
                             <th:block th:if="${a.estado.name() == 'EN_PROCESO'}">
+
                                 <button class="btn btn-sm btn-outline-success"
                                         title="Finalizar Alquiler"
                                         data-bs-toggle="modal"
@@ -84,6 +180,7 @@
                                         th:data-id="${a.id}">
                                     <i class="fas fa-check"></i>
                                 </button>
+
                                 <button class="btn btn-sm btn-outline-primary"
                                         title="Editar"
                                         data-bs-toggle="modal"
@@ -97,8 +194,7 @@
                                         th:data-usuario="${a.usuario != null ? a.usuario.id : ''}">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <!-- MODIFICADO (única línea que se tocó): antes era <a href=".." onclick="confirm(...)">.
-                                     Ahora abre el nuevo modalCancelarAlquiler en vez del confirm() nativo del navegador. -->
+
                                 <button type="button"
                                         class="btn btn-sm btn-outline-warning"
                                         title="Cancelar"
@@ -107,327 +203,1015 @@
                                         th:data-id="${a.id}"
                                         th:data-cliente="${a.cliente != null ? a.cliente.nombre : 'Sin Cliente'}"
                                         th:data-vehiculo="${a.vehiculo != null ? a.vehiculo.placa : 'Sin Vehículo'}">
+
                                     <i class="fas fa-ban"></i>
+
                                 </button>
+
                             </th:block>
-                            <!-- Eliminar -->
+
+                            <!-- ELIMINAR -->
+
                             <button class="btn btn-sm btn-outline-danger"
                                     title="Eliminar"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalEliminarAlquiler"
                                     th:data-id="${a.id}">
+
                                 <i class="fas fa-trash"></i>
+
                             </button>
+
                         </div>
+
                     </td>
+
                 </tr>
+
                 <tr th:if="${#lists.isEmpty(alquileres)}">
-                    <td colspan="9" class="text-center py-4 text-muted">No se encontraron registros de alquiler.</td>
+
+                    <td colspan="9"
+                        class="text-center py-4 text-muted">
+
+                        No se encontraron registros de alquiler.
+
+                    </td>
+
                 </tr>
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 
+
+    <!-- ====================================================== -->
     <!-- MODAL 1: NUEVO ALQUILER -->
-    <div class="modal fade" id="modalNuevoAlquiler" tabindex="-1" aria-hidden="true">
+    <!-- ====================================================== -->
+
+    <div class="modal fade"
+         id="modalNuevoAlquiler"
+         tabindex="-1"
+         aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-centered modal-lg">
+
             <div class="modal-content border-0 shadow">
+
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold text-dark">Registrar Alquiler</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form th:action="@{/Alquiler/Guardar}" th:object="${nuevoAlquiler}" method="post">
-                    <div class="modal-body py-4 row g-3">
 
-                        <!-- NUEVO: aviso de auto-relleno -->
-                        <div class="col-12">
-                            <div id="avisoAutoRellenoReserva" class="alert alert-info d-none py-2 px-3 mb-0 small" role="alert">
-                                <i class="fas fa-circle-info me-1"></i> Los campos se completaron automáticamente con los datos de la reserva seleccionada. Puedes ajustarlos si es necesario.
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Cliente</label>
-                            <select th:field="*{cliente.id}" class="form-select" required>
-                                <option value="" disabled selected>Seleccione Cliente</option>
-                                <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Vehículo</label>
-                            <select th:field="*{vehiculo.id}" class="form-select" required>
-                                <option value="" disabled selected>Seleccione Vehículo</option>
-                                <option th:each="v : ${vehiculos}" th:value="${v.id}" th:text="${v.placa}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Usuario Atiende</label>
-                            <select th:field="*{usuario.id}" class="form-select" required>
-                                <option value="" disabled selected>Seleccione Usuario</option>
-                                <option th:each="u : ${usuarios}" th:value="${u.id}" th:text="${u.nombre}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Reserva (Opcional)</label>
-                            <select th:field="*{reserva.id}" class="form-select">
-                                <option value="" selected>Sin Reserva</option>
-                                <option th:each="r : ${reservas}" th:value="${r.id}" th:text="'Reserva #' + ${r.id}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Fecha y Hora Fin Programada</label>
-                            <input type="datetime-local" th:field="*{fecha_fin_programada}" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold text-secondary small">Km Inicial</label>
-                            <input type="number" th:field="*{kilometraje_inicial}" class="form-control" min="0" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold text-secondary small">Precio Diario ($)</label>
-                            <input type="number" step="0.01" th:field="*{precio_diario_aplicado}" class="form-control" min="0.01" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top-0 pt-0">
-                        <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary px-3 fw-semibold" style="background-color: #4f46e5; border: none;">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 2: EDITAR ALQUILER -->
-    <div class="modal fade" id="modalEditarAlquiler" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold text-dark">Editar Alquiler</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form th:action="@{/Alquiler/Editar}" method="post">
-                    <div class="modal-body py-4 row g-3">
-                        <input type="hidden" id="editId" name="id">
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Cliente</label>
-                            <select id="editCliente" name="cliente.id" class="form-select" required>
-                                <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Vehículo</label>
-                            <select id="editVehiculo" name="vehiculo.id" class="form-select" required>
-                                <option th:each="v : ${vehiculos}" th:value="${v.id}" th:text="${v.placa}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Usuario Atiende</label>
-                            <select id="editUsuario" name="usuario.id" class="form-select" required>
-                                <option th:each="u : ${usuarios}" th:value="${u.id}" th:text="${u.nombre}"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Fecha Fin Programada</label>
-                            <input type="datetime-local" id="editFechaFin" name="fecha_fin_programada" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Km Inicial</label>
-                            <input type="number" id="editKmInicial" name="kilometraje_inicial" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-secondary small">Precio Diario ($)</label>
-                            <input type="number" step="0.01" id="editPrecio" name="precio_diario_aplicado" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top-0 pt-0">
-                        <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary px-3 fw-semibold" style="background-color: #4f46e5; border: none;">Actualizar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 3: FINALIZAR ALQUILER -->
-    <div class="modal fade" id="modalFinalizarAlquiler" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold text-dark">Finalizar Alquiler</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form th:action="@{/Alquiler/Finalizar}" method="post">
-                    <div class="modal-body py-4">
-                        <input type="hidden" id="finalizarId" name="id">
-                        <div class="mb-3">
-                            <label for="kilometrajeFinal" class="form-label fw-semibold text-secondary small">Kilometraje Final del Vehículo</label>
-                            <input type="number" id="kilometrajeFinal" name="kilometrajeFinal" class="form-control" placeholder="Ingrese el kilometraje de retorno" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top-0 pt-0">
-                        <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success px-3 fw-semibold">Confirmar y Finalizar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 4: CONFIRMAR ELIMINACIÓN -->
-    <div class="modal fade" id="modalEliminarAlquiler" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold text-dark">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body py-4">
-                    <p class="text-secondary mb-0">¿Estás seguro de que deseas eliminar el alquiler <strong id="eliminarAlquilerText" class="text-dark"></strong>?</p>
-                </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
-                    <a id="btnConfirmarEliminarAlquiler" href="#" class="btn btn-danger px-3 fw-semibold">Eliminar</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- NUEVO — MODAL 5: CONFIRMAR CANCELACIÓN (reemplaza el confirm() nativo del botón Cancelar) -->
-    <div class="modal fade" id="modalCancelarAlquiler" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
                     <h5 class="modal-title fw-bold text-dark">
-                        <i class="fas fa-triangle-exclamation text-warning me-2"></i>Confirmar Cancelación
+                        Registrar Alquiler
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
                 </div>
-                <div class="modal-body py-4">
-                    <p class="text-secondary mb-1">
-                        ¿Deseas cancelar el alquiler <strong id="cancelarAlquilerId" class="text-dark"></strong>
-                        de <strong id="cancelarAlquilerCliente" class="text-dark"></strong>
-                        (<span id="cancelarAlquilerVehiculo" class="text-dark"></span>)?
-                    </p>
-                    <p class="text-muted small mb-0">Esta acción marcará el alquiler como <strong>Cancelado</strong> y no se puede deshacer.</p>
-                </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="button" class="btn btn-light px-3 fw-semibold" data-bs-dismiss="modal">Volver</button>
-                    <a id="btnConfirmarCancelarAlquiler" href="#" class="btn btn-warning px-3 fw-semibold">Sí, Cancelar Alquiler</a>
-                </div>
+
+                <form th:action="@{/Alquiler/Guardar}"
+                      th:object="${nuevoAlquiler}"
+                      method="post">
+
+                    <div class="modal-body py-4 row g-3">
+
+                        <!-- AVISO -->
+
+                        <div class="col-12">
+
+                            <div id="avisoAutoRellenoReserva"
+                                 class="alert alert-info d-none py-2 px-3 mb-0 small"
+                                 role="alert">
+
+                                <i class="fas fa-circle-info me-1"></i>
+
+                                Los campos se completaron automáticamente
+                                con los datos de la reserva seleccionada.
+                                Puedes ajustarlos si es necesario.
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CLIENTE -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Cliente
+                            </label>
+
+                            <select th:field="*{cliente.id}"
+                                    class="form-select"
+                                    required>
+
+                                <option value=""
+                                        disabled
+                                        selected>
+                                    Seleccione Cliente
+                                </option>
+
+                                <option th:each="c : ${clientes}"
+                                        th:value="${c.id}"
+                                        th:text="${c.nombre}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- VEHICULO -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Vehículo
+                            </label>
+
+                            <select th:field="*{vehiculo.id}"
+                                    class="form-select"
+                                    required>
+
+                                <option value=""
+                                        disabled
+                                        selected>
+                                    Seleccione Vehículo
+                                </option>
+
+                                <option th:each="v : ${vehiculos}"
+                                        th:value="${v.id}"
+                                        th:text="${v.placa}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- USUARIO -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Usuario Atiende
+                            </label>
+
+                            <select th:field="*{usuario.id}"
+                                    class="form-select"
+                                    required>
+
+                                <option value=""
+                                        disabled
+                                        selected>
+                                    Seleccione Usuario
+                                </option>
+
+                                <option th:each="u : ${usuarios}"
+                                        th:value="${u.id}"
+                                        th:text="${u.nombre}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- RESERVA -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Reserva (Opcional)
+                            </label>
+
+                            <select th:field="*{reserva.id}"
+                                    class="form-select"
+                                    id="selectReserva">
+
+                                <option value="" selected>
+                                    Sin Reserva
+                                </option>
+
+                                <!--
+                                    AQUÍ ESTÁ EL CAMBIO IMPORTANTE.
+                                    Cada reserva guarda sus datos en data-*
+                                -->
+
+                                <option th:each="r : ${reservas}"
+                                        th:value="${r.id}"
+                                        th:data-cliente="${r.cliente != null ? r.cliente.id : ''}"
+                                        th:data-vehiculo="${r.vehiculo != null ? r.vehiculo.id : ''}"
+                                        th:data-fecha-fin="${r.fecha_fin}"
+                                        th:data-precio="${r.precio_diario_acordado}"
+                                        th:text="'Reserva #' + ${r.id}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- FECHA FIN -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Fecha y Hora Fin Programada
+                            </label>
+
+                            <input type="datetime-local"
+                                   th:field="*{fecha_fin_programada}"
+                                   class="form-control"
+                                   required>
+
+                        </div>
+
+
+                        <!-- KM INICIAL -->
+
+                        <div class="col-md-3">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Km Inicial
+                            </label>
+
+                            <input type="number"
+                                   th:field="*{kilometraje_inicial}"
+                                   class="form-control"
+                                   min="0"
+                                   required>
+
+                        </div>
+
+
+                        <!-- PRECIO -->
+
+                        <div class="col-md-3">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Precio Diario ($)
+                            </label>
+
+                            <input type="number"
+                                   step="0.01"
+                                   th:field="*{precio_diario_aplicado}"
+                                   class="form-control"
+                                   min="0.01"
+                                   required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer border-top-0 pt-0">
+
+                        <button type="button"
+                                class="btn btn-light px-3 fw-semibold"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-primary px-3 fw-semibold"
+                                style="background-color: #4f46e5; border: none;">
+                            Guardar
+                        </button>
+
+                    </div>
+
+                </form>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- SCRIPT JS PARA PASAR DATOS A LOS MODALES -->
+
+    <!-- ====================================================== -->
+    <!-- MODAL 2: EDITAR ALQUILER -->
+    <!-- ====================================================== -->
+
+    <div class="modal fade"
+         id="modalEditarAlquiler"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+
+            <div class="modal-content border-0 shadow">
+
+                <div class="modal-header border-bottom-0 pb-0">
+
+                    <h5 class="modal-title fw-bold text-dark">
+                        Editar Alquiler
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+
+                <form th:action="@{/Alquiler/Editar}"
+                      method="post">
+
+                    <div class="modal-body py-4 row g-3">
+
+                        <input type="hidden"
+                               id="editId"
+                               name="id">
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Cliente
+                            </label>
+
+                            <select id="editCliente"
+                                    name="cliente.id"
+                                    class="form-select"
+                                    required>
+
+                                <option th:each="c : ${clientes}"
+                                        th:value="${c.id}"
+                                        th:text="${c.nombre}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Vehículo
+                            </label>
+
+                            <select id="editVehiculo"
+                                    name="vehiculo.id"
+                                    class="form-select"
+                                    required>
+
+                                <option th:each="v : ${vehiculos}"
+                                        th:value="${v.id}"
+                                        th:text="${v.placa}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Usuario Atiende
+                            </label>
+
+                            <select id="editUsuario"
+                                    name="usuario.id"
+                                    class="form-select"
+                                    required>
+
+                                <option th:each="u : ${usuarios}"
+                                        th:value="${u.id}"
+                                        th:text="${u.nombre}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Fecha Fin Programada
+                            </label>
+
+                            <input type="datetime-local"
+                                   id="editFechaFin"
+                                   name="fecha_fin_programada"
+                                   class="form-control"
+                                   required>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Km Inicial
+                            </label>
+
+                            <input type="number"
+                                   id="editKmInicial"
+                                   name="kilometraje_inicial"
+                                   class="form-control"
+                                   required>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold text-secondary small">
+                                Precio Diario ($)
+                            </label>
+
+                            <input type="number"
+                                   step="0.01"
+                                   id="editPrecio"
+                                   name="precio_diario_aplicado"
+                                   class="form-control"
+                                   required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer border-top-0 pt-0">
+
+                        <button type="button"
+                                class="btn btn-light px-3 fw-semibold"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-primary px-3 fw-semibold"
+                                style="background-color: #4f46e5; border: none;">
+                            Actualizar
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- MODAL 3: FINALIZAR ALQUILER -->
+    <!-- ====================================================== -->
+
+    <div class="modal fade"
+         id="modalFinalizarAlquiler"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content border-0 shadow">
+
+                <div class="modal-header border-bottom-0 pb-0">
+
+                    <h5 class="modal-title fw-bold text-dark">
+                        Finalizar Alquiler
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+
+                <form th:action="@{/Alquiler/Finalizar}"
+                      method="post">
+
+                    <div class="modal-body py-4">
+
+                        <input type="hidden"
+                               id="finalizarId"
+                               name="id">
+
+                        <div class="mb-3">
+
+                            <label for="kilometrajeFinal"
+                                   class="form-label fw-semibold text-secondary small">
+                                Kilometraje Final del Vehículo
+                            </label>
+
+                            <input type="number"
+                                   id="kilometrajeFinal"
+                                   name="kilometrajeFinal"
+                                   class="form-control"
+                                   placeholder="Ingrese el kilometraje de retorno"
+                                   required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer border-top-0 pt-0">
+
+                        <button type="button"
+                                class="btn btn-light px-3 fw-semibold"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-success px-3 fw-semibold">
+                            Confirmar y Finalizar
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- MODAL 4: ELIMINAR -->
+    <!-- ====================================================== -->
+
+    <div class="modal fade"
+         id="modalEliminarAlquiler"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content border-0 shadow">
+
+                <div class="modal-header border-bottom-0 pb-0">
+
+                    <h5 class="modal-title fw-bold text-dark">
+                        Confirmar Eliminación
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+
+                <div class="modal-body py-4">
+
+                    <p class="text-secondary mb-0">
+
+                        ¿Estás seguro de que deseas eliminar el alquiler
+
+                        <strong id="eliminarAlquilerText"
+                                class="text-dark">
+                        </strong>?
+
+                    </p>
+
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0">
+
+                    <button type="button"
+                            class="btn btn-light px-3 fw-semibold"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <a id="btnConfirmarEliminarAlquiler"
+                       href="#"
+                       class="btn btn-danger px-3 fw-semibold">
+                        Eliminar
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- MODAL 5: CANCELAR -->
+    <!-- ====================================================== -->
+
+    <div class="modal fade"
+         id="modalCancelarAlquiler"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content border-0 shadow">
+
+                <div class="modal-header border-bottom-0 pb-0">
+
+                    <h5 class="modal-title fw-bold text-dark">
+
+                        <i class="fas fa-triangle-exclamation text-warning me-2"></i>
+
+                        Confirmar Cancelación
+
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+
+                <div class="modal-body py-4">
+
+                    <p class="text-secondary mb-1">
+
+                        ¿Deseas cancelar el alquiler
+
+                        <strong id="cancelarAlquilerId"
+                                class="text-dark">
+                        </strong>
+
+                        de
+
+                        <strong id="cancelarAlquilerCliente"
+                                class="text-dark">
+                        </strong>
+
+                        (<span id="cancelarAlquilerVehiculo"
+                               class="text-dark">
+                        </span>)?
+
+                    </p>
+
+                    <p class="text-muted small mb-0">
+
+                        Esta acción marcará el alquiler como
+                        <strong>Cancelado</strong>
+                        y no se puede deshacer.
+
+                    </p>
+
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0">
+
+                    <button type="button"
+                            class="btn btn-light px-3 fw-semibold"
+                            data-bs-dismiss="modal">
+                        Volver
+                    </button>
+
+                    <a id="btnConfirmarCancelarAlquiler"
+                       href="#"
+                       class="btn btn-warning px-3 fw-semibold">
+                        Sí, Cancelar Alquiler
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ====================================================== -->
+
     <script>
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Modal Editar
-            const modalEditar = document.getElementById('modalEditarAlquiler');
+
+
+            // ==================================================
+            // MODAL EDITAR
+            // ==================================================
+
+            const modalEditar =
+                document.getElementById('modalEditarAlquiler');
+
             if (modalEditar) {
-                modalEditar.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    document.getElementById('editId').value = button.getAttribute('data-id');
-                    document.getElementById('editFechaFin').value = button.getAttribute('data-fin');
-                    document.getElementById('editKmInicial').value = button.getAttribute('data-kminicial');
-                    document.getElementById('editPrecio').value = button.getAttribute('data-precio');
-                    document.getElementById('editCliente').value = button.getAttribute('data-cliente');
-                    document.getElementById('editVehiculo').value = button.getAttribute('data-vehiculo');
-                    document.getElementById('editUsuario').value = button.getAttribute('data-usuario');
-                });
+
+                modalEditar.addEventListener(
+                    'show.bs.modal',
+                    function (event) {
+
+                        const button = event.relatedTarget;
+
+                        document.getElementById('editId').value =
+                            button.getAttribute('data-id');
+
+                        document.getElementById('editFechaFin').value =
+                            button.getAttribute('data-fin');
+
+                        document.getElementById('editKmInicial').value =
+                            button.getAttribute('data-kminicial');
+
+                        document.getElementById('editPrecio').value =
+                            button.getAttribute('data-precio');
+
+                        document.getElementById('editCliente').value =
+                            button.getAttribute('data-cliente');
+
+                        document.getElementById('editVehiculo').value =
+                            button.getAttribute('data-vehiculo');
+
+                        document.getElementById('editUsuario').value =
+                            button.getAttribute('data-usuario');
+
+                    }
+                );
+
             }
 
-            // Modal Finalizar
-            const modalFinalizar = document.getElementById('modalFinalizarAlquiler');
+
+            // ==================================================
+            // MODAL FINALIZAR
+            // ==================================================
+
+            const modalFinalizar =
+                document.getElementById('modalFinalizarAlquiler');
+
             if (modalFinalizar) {
-                modalFinalizar.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    document.getElementById('finalizarId').value = button.getAttribute('data-id');
-                });
+
+                modalFinalizar.addEventListener(
+                    'show.bs.modal',
+                    function (event) {
+
+                        const button = event.relatedTarget;
+
+                        document.getElementById('finalizarId').value =
+                            button.getAttribute('data-id');
+
+                    }
+                );
+
             }
 
-            // Modal Eliminar
-            const modalEliminar = document.getElementById('modalEliminarAlquiler');
+
+            // ==================================================
+            // MODAL ELIMINAR
+            // ==================================================
+
+            const modalEliminar =
+                document.getElementById('modalEliminarAlquiler');
+
             if (modalEliminar) {
-                modalEliminar.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    document.getElementById('eliminarAlquilerText').textContent = '#' + id;
-                    document.getElementById('btnConfirmarEliminarAlquiler').href = '/Alquiler/Eliminar/' + id;
-                });
+
+                modalEliminar.addEventListener(
+                    'show.bs.modal',
+                    function (event) {
+
+                        const button = event.relatedTarget;
+
+                        const id =
+                            button.getAttribute('data-id');
+
+                        document.getElementById(
+                            'eliminarAlquilerText'
+                        ).textContent = '#' + id;
+
+                        document.getElementById(
+                            'btnConfirmarEliminarAlquiler'
+                        ).href = '/Alquiler/Eliminar/' + id;
+
+                    }
+                );
+
             }
-        });
-    </script>
 
-    <!-- ======================= NUEVO: BLOQUE AGREGADO (cancelar mejorado + auto-relleno con reserva) ======================= -->
-    <!-- Script independiente; no toca el bloque de arriba. -->
 
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        // NOTA: se asume que Reserva expone estos campos siguiendo la misma convención
-        // que Alquiler (fecha_fin_programada, kilometraje_inicial, precio_diario_aplicado).
-        // Si el nombre real de algún campo en tu entidad Reserva es distinto, dime cuáles son
-        // y ajusto este bloque — mientras tanto la vista no truena aunque un campo venga null.
-        var reservasExistentes = /*[[${reservas}]]*/ [];
-        /*]]>*/
-    </script>
+            // ==================================================
+            // MODAL CANCELAR
+            // ==================================================
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+            const modalCancelar =
+                document.getElementById('modalCancelarAlquiler');
 
-            // --- Modal Cancelar Alquiler (reemplaza el confirm() nativo) ---
-            const modalCancelar = document.getElementById('modalCancelarAlquiler');
             if (modalCancelar) {
-                modalCancelar.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const cliente = button.getAttribute('data-cliente');
-                    const vehiculo = button.getAttribute('data-vehiculo');
 
-                    document.getElementById('cancelarAlquilerId').textContent = '#' + id;
-                    document.getElementById('cancelarAlquilerCliente').textContent = cliente;
-                    document.getElementById('cancelarAlquilerVehiculo').textContent = vehiculo;
-                    document.getElementById('btnConfirmarCancelarAlquiler').href = '/Alquiler/Cancelar/' + id;
-                });
+                modalCancelar.addEventListener(
+                    'show.bs.modal',
+                    function (event) {
+
+                        const button = event.relatedTarget;
+
+                        const id =
+                            button.getAttribute('data-id');
+
+                        const cliente =
+                            button.getAttribute('data-cliente');
+
+                        const vehiculo =
+                            button.getAttribute('data-vehiculo');
+
+                        document.getElementById(
+                            'cancelarAlquilerId'
+                        ).textContent = '#' + id;
+
+                        document.getElementById(
+                            'cancelarAlquilerCliente'
+                        ).textContent = cliente;
+
+                        document.getElementById(
+                            'cancelarAlquilerVehiculo'
+                        ).textContent = vehiculo;
+
+                        document.getElementById(
+                            'btnConfirmarCancelarAlquiler'
+                        ).href = '/Alquiler/Cancelar/' + id;
+
+                    }
+                );
+
             }
 
-            // --- Auto-relleno del formulario Nuevo Alquiler al elegir una Reserva ---
-            const modalNuevoAlquiler = document.getElementById('modalNuevoAlquiler');
+
+            // ==================================================
+            // AUTO-RELLENO AL SELECCIONAR RESERVA
+            // ==================================================
+
+            const modalNuevoAlquiler =
+                document.getElementById('modalNuevoAlquiler');
+
             if (modalNuevoAlquiler) {
-                const selectReserva = modalNuevoAlquiler.querySelector('[name="reserva.id"]');
-                const selectCliente = modalNuevoAlquiler.querySelector('[name="cliente.id"]');
-                const selectVehiculo = modalNuevoAlquiler.querySelector('[name="vehiculo.id"]');
-                const inputFechaFin = modalNuevoAlquiler.querySelector('[name="fecha_fin_programada"]');
-                const inputKmInicial = modalNuevoAlquiler.querySelector('[name="kilometraje_inicial"]');
-                const inputPrecio = modalNuevoAlquiler.querySelector('[name="precio_diario_aplicado"]');
-                const aviso = document.getElementById('avisoAutoRellenoReserva');
+
+                const selectReserva =
+                    document.getElementById('selectReserva');
+
+                const selectCliente =
+                    modalNuevoAlquiler.querySelector(
+                        '[name="cliente.id"]'
+                    );
+
+                const selectVehiculo =
+                    modalNuevoAlquiler.querySelector(
+                        '[name="vehiculo.id"]'
+                    );
+
+                const inputFechaFin =
+                    modalNuevoAlquiler.querySelector(
+                        '[name="fecha_fin_programada"]'
+                    );
+
+                const inputPrecio =
+                    modalNuevoAlquiler.querySelector(
+                        '[name="precio_diario_aplicado"]'
+                    );
+
+                const aviso =
+                    document.getElementById(
+                        'avisoAutoRellenoReserva'
+                    );
+
 
                 if (selectReserva) {
-                    selectReserva.addEventListener('change', function () {
-                        const idReserva = this.value;
-                        if (!idReserva) {
-                            aviso.classList.add('d-none');
-                            return;
+
+                    selectReserva.addEventListener(
+                        'change',
+                        function () {
+
+                            const opcion =
+                                this.options[this.selectedIndex];
+
+
+                            // ==========================================
+                            // SI SE SELECCIONA "SIN RESERVA"
+                            // ==========================================
+
+                            if (!this.value) {
+
+                                aviso.classList.add('d-none');
+
+                                return;
+                            }
+
+
+                            // ==========================================
+                            // OBTENER DATOS DE LA RESERVA
+                            // ==========================================
+
+                            const clienteId =
+                                opcion.getAttribute(
+                                    'data-cliente'
+                                );
+
+                            const vehiculoId =
+                                opcion.getAttribute(
+                                    'data-vehiculo'
+                                );
+
+                            const fechaFin =
+                                opcion.getAttribute(
+                                    'data-fecha-fin'
+                                );
+
+                            const precio =
+                                opcion.getAttribute(
+                                    'data-precio'
+                                );
+
+
+                            // ==========================================
+                            // CLIENTE
+                            // ==========================================
+
+                            if (clienteId) {
+
+                                selectCliente.value =
+                                    clienteId;
+
+                                selectCliente.dispatchEvent(
+                                    new Event('change')
+                                );
+
+                            }
+
+
+                            // ==========================================
+                            // VEHÍCULO
+                            // ==========================================
+
+                            if (vehiculoId) {
+
+                                selectVehiculo.value =
+                                    vehiculoId;
+
+                                selectVehiculo.dispatchEvent(
+                                    new Event('change')
+                                );
+
+                            }
+
+
+                            // ==========================================
+                            // FECHA FIN
+                            // ==========================================
+
+                            if (fechaFin) {
+
+                                inputFechaFin.value =
+                                    fechaFin + 'T00:00';
+
+                            }
+
+
+                            // ==========================================
+                            // PRECIO DIARIO
+                            // ==========================================
+
+                            if (precio) {
+
+                                inputPrecio.value =
+                                    precio;
+
+                            }
+
+
+                            // ==========================================
+                            // MOSTRAR AVISO
+                            // ==========================================
+
+                            aviso.classList.remove(
+                                'd-none'
+                            );
+
                         }
+                    );
 
-                        const reserva = reservasExistentes.find(function (r) {
-                            return String(r.id) === String(idReserva);
-                        });
-                        if (!reserva) return;
-
-                        if (reserva.cliente && reserva.cliente.id) selectCliente.value = reserva.cliente.id;
-                        if (reserva.vehiculo && reserva.vehiculo.id) selectVehiculo.value = reserva.vehiculo.id;
-                        if (reserva.fecha_fin_programada) inputFechaFin.value = reserva.fecha_fin_programada;
-                        if (reserva.kilometraje_inicial != null) inputKmInicial.value = reserva.kilometraje_inicial;
-                        if (reserva.precio_diario_aplicado != null) inputPrecio.value = reserva.precio_diario_aplicado;
-
-                        aviso.classList.remove('d-none');
-                    });
                 }
+
             }
+
         });
+
     </script>
-    <!-- ======================= FIN BLOQUE AGREGADO ======================= -->
 
 </div>
+
 </html>
