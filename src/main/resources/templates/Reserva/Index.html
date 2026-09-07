@@ -111,25 +111,25 @@
 
                     <td class="py-3 px-4">
 
-    <span th:if="${reserva.estado == 'PENDIENTE'}"
-          class="badge rounded-pill text-bg-warning">
-        Pendiente
-    </span>
+                        <span th:if="${reserva.estado == 'PENDIENTE'}"
+                              class="badge rounded-pill text-bg-warning">
+                            Pendiente
+                        </span>
 
                         <span th:if="${reserva.estado == 'CONFIRMADA'}"
                               class="badge rounded-pill text-bg-success">
-        Confirmada
-    </span>
+                            Confirmada
+                        </span>
 
                         <span th:if="${reserva.estado == 'CANCELADA'}"
                               class="badge rounded-pill text-bg-danger">
-        Cancelada
-    </span>
+                            Cancelada
+                        </span>
 
                         <span th:if="${reserva.estado == 'COMPLETADA'}"
                               class="badge rounded-pill text-bg-primary">
-        Completada
-    </span>
+                            Completada
+                        </span>
 
                     </td>
 
@@ -209,6 +209,7 @@
 
     </div>
 
+    <!-- MODAL NUEVA RESERVA -->
     <div class="modal fade"
          id="modalNuevaReserva"
          tabindex="-1"
@@ -246,10 +247,9 @@
                                 </label>
 
                                 <input type="text"
-                                       th:field="*{codigoReserva}"
-                                       class="form-control"
-                                       placeholder="Ej: RES-001"
-                                       required>
+                                       class="form-control bg-light"
+                                       placeholder="Autogenerado por el sistema"
+                                       readonly>
 
                             </div>
 
@@ -398,6 +398,7 @@
 
     </div>
 
+    <!-- MODAL EDITAR RESERVA -->
     <div class="modal fade"
          id="modalEditarReserva"
          tabindex="-1"
@@ -440,8 +441,8 @@
                                 <input type="text"
                                        id="editarCodigo"
                                        name="codigoReserva"
-                                       class="form-control"
-                                       required>
+                                       class="form-control bg-light"
+                                       readonly>
 
                             </div>
 
@@ -595,6 +596,7 @@
 
     </div>
 
+    <!-- MODAL ELIMINAR RESERVA -->
     <div class="modal fade"
          id="modalEliminarReserva"
          tabindex="-1"
@@ -711,4 +713,3 @@
 </div>
 
 </html>
-

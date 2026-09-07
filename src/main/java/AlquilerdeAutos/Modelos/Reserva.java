@@ -18,6 +18,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "reservas")
@@ -32,8 +33,8 @@ public class Reserva {
     private Integer Id;
 
     @NotBlank(message = "El Codigo de Reserva es Requerido")
-    @Column(name = "Codigo_reserva")
-    private String Codigo_reserva;
+    @Column(name = "codigoReserva")
+    private String codigoReserva;
 
     @Column(name = "Fecha_solicitud", updatable = false)
     private LocalDateTime Fecha_solicitud;
@@ -65,13 +66,6 @@ public class Reserva {
     @JoinColumn(name = "Id_vehiculo")
     private Vehiculo vehiculo;
 
-    @PrePersist
-    protected void onCreate() {
-        if (Fecha_solicitud == null) {
-            Fecha_solicitud = LocalDateTime.now();
-        }
-    }
-
     public Integer getId() {
         return Id;
     }
@@ -81,11 +75,11 @@ public class Reserva {
     }
 
     public String getCodigoReserva() {
-        return Codigo_reserva;
+        return codigoReserva;
     }
 
     public void setCodigoReserva(String codigo_reserva) {
-        Codigo_reserva = codigo_reserva;
+        codigoReserva = codigo_reserva;
     }
 
     public LocalDateTime getFecha_solicitud() {
@@ -142,5 +136,17 @@ public class Reserva {
 
     public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.codigoReserva == null || this.codigoReserva.isBlank()) {
+            this.codigoReserva = "RES-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        }
+
+            if (Fecha_solicitud == null) {
+                Fecha_solicitud = LocalDateTime.now();
+            }
+
     }
 }

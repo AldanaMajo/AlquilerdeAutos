@@ -71,7 +71,9 @@ public class VehiculoServicios implements IvehiculoServicios {
         if (vehiculo.getCategoria() != null && vehiculo.getCategoria().getId() != null) {
             existente.setCategoria(vehiculo.getCategoria());
         }
-
+        if (vehiculo.getImagen() != null) {
+            existente.setImagen(vehiculo.getImagen());
+        }
         return vehiculoRepository.save(existente);
     }
 

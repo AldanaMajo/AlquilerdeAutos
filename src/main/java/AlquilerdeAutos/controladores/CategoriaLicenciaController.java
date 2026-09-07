@@ -25,6 +25,8 @@ public class CategoriaLicenciaController {
     @GetMapping("/Index")
     public String index(
             @RequestParam(required = false) String buscar,
+            @RequestParam(required = false) String error,
+            @RequestParam(required = false) String mensaje,
             Model model) {
 
         List<CategoriaLicencia> categorias =
@@ -32,6 +34,7 @@ public class CategoriaLicenciaController {
 
         // Filtrar por nombre si se realizó una búsqueda
         if (buscar != null && !buscar.trim().isEmpty()) {
+
             String texto = buscar.trim().toLowerCase();
 
             categorias = categorias.stream()
@@ -45,6 +48,8 @@ public class CategoriaLicenciaController {
 
         model.addAttribute("categorias", categorias);
         model.addAttribute("buscar", buscar);
+        model.addAttribute("error", error);
+        model.addAttribute("mensaje", mensaje);
 
         return "CategoriaLicencia/Index";
     }
@@ -54,12 +59,26 @@ public class CategoriaLicenciaController {
     public String guardar(
             @RequestParam String nombre) {
 
+        String nombreLimpio = nombre.trim();
+
+        // Validar que no exista una categoría con el mismo nombre
+        boolean existe = categoriaLicenciaService.listar()
+                .stream()
+                .anyMatch(categoria ->
+                        categoria.getNombre() != null &&
+                                categoria.getNombre().trim().equalsIgnoreCase(nombreLimpio)
+                );
+
+        if (existe) {
+            return "redirect:/CategoriaLicencia/Index?error=duplicado";
+        }
+
         CategoriaLicencia categoria = new CategoriaLicencia();
-        categoria.setNombre(nombre);
+        categoria.setNombre(nombreLimpio);
 
         categoriaLicenciaService.guardar(categoria);
 
-        return "redirect:/CategoriaLicencia/Index";
+        return "redirect:/CategoriaLicencia/Index?mensaje=guardado";
     }
 
     // EDITAR
@@ -68,12 +87,27 @@ public class CategoriaLicenciaController {
             @RequestParam Integer id,
             @RequestParam String nombre) {
 
+        String nombreLimpio = nombre.trim();
+
+        // Validar que no exista otra categoría con el mismo nombre
+        boolean existe = categoriaLicenciaService.listar()
+                .stream()
+                .anyMatch(categoria ->
+                        categoria.getId() != id &&
+                                categoria.getNombre() != null &&
+                                categoria.getNombre().trim().equalsIgnoreCase(nombreLimpio)
+                );
+
+        if (existe) {
+            return "redirect:/CategoriaLicencia/Index?error=duplicado";
+        }
+
         CategoriaLicencia categoria = new CategoriaLicencia();
-        categoria.setNombre(nombre);
+        categoria.setNombre(nombreLimpio);
 
         categoriaLicenciaService.actualizar(id, categoria);
 
-        return "redirect:/CategoriaLicencia/Index";
+        return "redirect:/CategoriaLicencia/Index?mensaje=actualizado";
     }
 
     // ELIMINAR
@@ -83,6 +117,7 @@ public class CategoriaLicenciaController {
 
         categoriaLicenciaService.eliminar(id);
 
-        return "redirect:/CategoriaLicencia/Index";
+        return "redirect:/CategoriaLicencia/Index?mensaje=eliminado";
     }
 }
+

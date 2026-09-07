@@ -27,6 +27,9 @@ public class Vehiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
+    @Column(name = "imagen")
+    private String imagen; // guardará el nombre del archivo, ej: "abc123.jpg"
+
 
     @NotBlank(message = "La Placa es Requerida")
     private String Placa;
@@ -101,7 +104,7 @@ public class Vehiculo {
 
     public BigDecimal getPrecio_por_dia() {
         if (this.categoria != null) {
-            return this.categoria.getTarifa_base_diaria();
+            return this.categoria.getTarifaBaseDiaria();
         }
         return BigDecimal.ZERO;
     }
@@ -133,4 +136,6 @@ public class Vehiculo {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
+    public String getImagen() { return imagen; }
+    public void setImagen(String imagen) { this.imagen = imagen; }
 }

@@ -26,7 +26,8 @@ public class CategoriaServicios implements IcategoriaServicios {
     @Override
     public Categoria buscarPorId(Integer id) {
         return categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: " + id));
+                .orElseThrow(() ->
+                        new RuntimeException("Categoria no encontrada con id: " + id));
     }
 
     @Override
@@ -37,8 +38,10 @@ public class CategoriaServicios implements IcategoriaServicios {
     @Override
     public Categoria actualizar(Integer id, Categoria categoria) {
         Categoria existente = buscarPorId(id);
+
         existente.setNombre(categoria.getNombre());
-        existente.setTarifa_base_diaria(categoria.getTarifa_base_diaria());
+        existente.setTarifaBaseDiaria(categoria.getTarifaBaseDiaria());
+
         return categoriaRepository.save(existente);
     }
 
@@ -50,7 +53,10 @@ public class CategoriaServicios implements IcategoriaServicios {
 
     @Override
     public boolean existePorNombre(String nombre) {
-        if (nombre == null || nombre.isBlank()) return false;
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return false;
+        }
+
         return categoriaRepository.existsByNombreIgnoreCase(nombre.trim());
     }
 }

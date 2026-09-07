@@ -15,39 +15,41 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "categorias")
 public class Categoria {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @NotBlank(message = "El Nombre es Requerido")
-    private String Nombre;
+    @Column(name = "nombre")
+    private String nombre;
 
     @NotNull(message = "La Tarifa Base Diaria es Requerida")
     @Positive(message = "La Tarifa Base Diaria debe ser mayor a 0")
-    @Column(name = "Tarifa_base_diaria")
-    private BigDecimal Tarifa_base_diaria;
+    @Column(name = "tarifa_base_diaria")
+    private BigDecimal tarifaBaseDiaria;
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String nombre) {
-        Nombre = nombre;
+        this.nombre = nombre;
     }
 
-    public BigDecimal getTarifa_base_diaria() {
-        return Tarifa_base_diaria;
+    public BigDecimal getTarifaBaseDiaria() {
+        return tarifaBaseDiaria;
     }
 
-    public void setTarifa_base_diaria(BigDecimal tarifa_base_diaria) {
-        Tarifa_base_diaria = tarifa_base_diaria;
+    public void setTarifaBaseDiaria(BigDecimal tarifaBaseDiaria) {
+        this.tarifaBaseDiaria = tarifaBaseDiaria;
     }
 }
