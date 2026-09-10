@@ -30,27 +30,39 @@ public class PagoServicios implements IpagoServicios {
 
     @Override
     public Pago buscarPorId(Integer id) {
+
         return pagoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Pago no encontrado con id: " + id
+                        )
+                );
     }
 
     @Override
     public Pago guardar(Pago pago) {
+
         return pagoRepository.save(pago);
     }
 
     @Override
     public Pago actualizar(Integer id, Pago pago) {
+
         Pago existente = buscarPorId(id);
+
         existente.setMonto(pago.getMonto());
         existente.setMetodoPago(pago.getMetodoPago());
         existente.setAlquiler(pago.getAlquiler());
+
         return pagoRepository.save(existente);
     }
 
     @Override
     public void eliminar(Integer id) {
+
         buscarPorId(id);
+
         pagoRepository.deleteById(id);
     }
 }
+

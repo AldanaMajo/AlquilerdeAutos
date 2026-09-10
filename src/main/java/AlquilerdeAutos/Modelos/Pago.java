@@ -22,7 +22,10 @@ import java.time.LocalDateTime;
 public class Pago {
 
     public enum MetodoPago {
-        EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
+        EFECTIVO,
+        TARJETA_CREDITO,
+        TARJETA_DEBITO,
+        TRANSFERENCIA
     }
 
     @Id
@@ -43,11 +46,12 @@ public class Pago {
 
     @NotNull(message = "El Alquiler es Requerido")
     @ManyToOne
-    @JoinColumn(name = "Id_alquiler")
+    @JoinColumn(name = "Id_alquiler", nullable = false)
     private Alquiler alquiler;
 
     @PrePersist
     protected void onCreate() {
+
         if (Fecha_pago == null) {
             Fecha_pago = LocalDateTime.now();
         }
@@ -93,3 +97,4 @@ public class Pago {
         this.alquiler = alquiler;
     }
 }
+
